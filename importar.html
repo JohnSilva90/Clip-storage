@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Novo projeto — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="app" data-pagina="importar">
+    <aside class="lateral" id="lateral"></aside>
+    <div class="principal">
+      <header class="topo-app" id="topoApp"></header>
+      <main class="conteudo-app" id="conteudo">
+        <div class="cabeca-pagina">
+          <div><h1>Novo projeto</h1><p>Envie o vídeo, escolha o trecho e deixe a IA encontrar os melhores momentos.</p></div>
+        </div>
+
+        <div class="importar-grade">
+          <section class="bloco cartao">
+            <div id="etapaConfig">
+              <div class="abas-app" role="tablist">
+                <button class="ativa" data-origem="arquivo"><i data-icone="pasta"></i> Arquivo</button>
+                <button data-origem="link"><i data-icone="link"></i> Link</button>
+                <button data-origem="plataforma"><i data-icone="youtube"></i> YouTube/Twitch</button>
+              </div>
+
+              <div id="painelArquivo">
+                <div class="soltar" id="soltar" tabindex="0" role="button" aria-label="Escolher arquivo de vídeo">
+                  <div class="icone-grande"><i data-icone="upload"></i></div>
+                  <strong>Arraste seu vídeo aqui</strong>
+                  <span>ou clique para escolher · MP4, MOV, MKV ou WEBM</span>
+                </div>
+                <input type="file" id="inputArquivo" accept="video/*" hidden>
+              </div>
+
+              <div id="painelLink" hidden>
+                <div class="campo">
+                  <label for="entradaLink" id="rotuloLink">Link do vídeo</label>
+                  <div style="display:flex;gap:10px">
+                    <div class="entrada" style="flex:1"><i data-icone="link"></i><input type="url" id="entradaLink" placeholder="https://"></div>
+                    <button class="btn btn-primario" id="btnLink">Carregar</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="arquivo-escolhido" id="arquivoEscolhido" hidden style="margin-top:18px">
+                <div class="demo-icone" style="width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--accent))"><i data-icone="filme"></i></div>
+                <div style="min-width:0"><strong id="escolhidoNome"></strong><small id="escolhidoInfo"></small></div>
+                <button class="icone-btn" id="btnLimpar" aria-label="Remover vídeo"><i data-icone="fechar"></i></button>
+              </div>
+
+              <div id="opcoes" hidden>
+                <div class="opcoes-corte">
+                  <div class="campo"><label for="trechoIni">Analisar a partir do minuto</label><div class="entrada"><i data-icone="relogio"></i><input type="number" id="trechoIni" min="0" value="0"></div></div>
+                  <div class="campo"><label for="trechoFim">Até o minuto</label><div class="entrada"><i data-icone="relogio"></i><input type="number" id="trechoFim" min="1" value="1"></div></div>
+                  <div class="campo"><label for="qtdCortes">Quantos cortes</label><div class="entrada"><i data-icone="tesoura"></i><select id="qtdCortes"><option value="auto">Automático (IA decide)</option><option value="5">Até 5</option><option value="10">Até 10</option><option value="30">Até 30</option></select></div></div>
+                  <div class="campo"><label for="durCortes">Duração de cada corte</label><div class="entrada"><i data-icone="relogio"></i><select id="durCortes"><option value="curto">15 a 30 segundos</option><option value="medio" selected>30 a 60 segundos</option><option value="longo">60 a 90 segundos</option></select></div></div>
+                  <div class="campo"><label for="idioma">Idioma da legenda</label><div class="entrada"><i data-icone="texto"></i><select id="idioma"><option value="pt">Português (Brasil)</option><option value="en">Inglês</option><option value="es">Espanhol</option></select></div></div>
+                  <div class="campo"><label for="formato">Formato</label><div class="entrada"><i data-icone="recortar"></i><select id="formato"><option value="9:16">9:16 (Reels, TikTok, Shorts)</option><option value="1:1">1:1 (Feed)</option><option value="16:9">16:9 (YouTube)</option></select></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="etapaProc" hidden>
+              <h2 id="tituloProc" style="font-size:22px">Processando seu vídeo...</h2>
+              <p style="color:var(--text-2);margin-top:6px" id="textoProc"></p>
+              <ol class="etapas-proc" id="etapasProc">
+                <li data-texto="Enviando o vídeo para o seu storage..."><span class="bolinha"><i data-icone="check"></i></span> Envio ou download do vídeo</li>
+                <li data-texto="Transformando o áudio em texto..."><span class="bolinha"><i data-icone="check"></i></span> Transcrição do áudio</li>
+                <li data-texto="A IA está procurando os melhores momentos..."><span class="bolinha"><i data-icone="check"></i></span> IA escolhendo os trechos</li>
+                <li data-texto="Cortando em vertical e colocando legenda..."><span class="bolinha"><i data-icone="check"></i></span> Corte, formato e legenda</li>
+              </ol>
+              <div class="barra-grande"><span id="barraProc"></span></div>
+              <a href="editor.html" class="btn btn-primario btn-grande" id="btnVerCortes" hidden style="margin-top:22px">Ver meus cortes <i data-icone="seta"></i></a>
+            </div>
+          </section>
+
+          <aside class="resumo cartao" id="resumoBloco">
+            <h2>Resumo</h2>
+            <div class="resumo-linha"><span>Duração analisada</span><b id="resumoDur">—</b></div>
+            <div class="resumo-linha"><span>Seu saldo após</span><b><span id="resumoSaldo">0</span> créditos</b></div>
+            <div class="resumo-total"><span>Custo</span><strong><span id="resumoCred">0</span> créditos</strong></div>
+            <button class="btn btn-primario btn-bloco btn-grande" id="btnGerar" disabled><i data-icone="brilho"></i> Gerar cortes</button>
+            <p class="aviso" id="avisoResumo">Escolha um vídeo para ver o custo.</p>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app-real.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

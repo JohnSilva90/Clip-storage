@@ -1,0 +1,22 @@
+# Copie este arquivo para um arquivo chamado ".env" (o iniciar.bat faz isso sozinho) e preencha.
+
+# Chave secreta para os logins (troque por um texto grande e aleatório)
+CHAVE_SECRETA=troque-esta-chave-por-um-texto-grande-e-aleatorio
+
+# (Opcional) Chave da API da Anthropic para a IA escolher os melhores trechos.
+# Sem ela, o Clip Storage usa o modo gratuito (pelo volume da voz).
+ANTHROPIC_API_KEY=
+
+# Modelo do Whisper para transcrever: tiny, base, small, medium (maior = melhor e mais lento)
+WHISPER_MODELO=small
+# "cuda" se tiver placa NVIDIA configurada, ou "cpu"
+WHISPER_DISPOSITIVO=cpu
+
+# ---------- Pagamentos (Mercado Pago) ----------
+# Pegue em https://www.mercadopago.com.br/developers/panel/app  (Suas integrações > Credenciais)
+# Comece SEMPRE com o Access Token de TESTE. Sem token, os pagamentos ficam em modo simulação.
+MP_ACCESS_TOKEN=
+# "Assinatura secreta" dos webhooks (Suas integrações > Webhooks). Protege contra avisos falsos.
+MP_WEBHOOK_SECRET=
+# Endereço público do site (no lançamento, ex.: https://clipstorage.com.br)
+URL_PUBLICA=http://localhost:8000

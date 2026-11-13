@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Início — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="app" data-pagina="painel">
+    <aside class="lateral" id="lateral"></aside>
+    <div class="principal">
+      <header class="topo-app" id="topoApp"></header>
+      <main class="conteudo-app" id="conteudo">
+        <div class="cabeca-pagina">
+          <div><h1 id="saudacao">Olá!</h1><p>Veja como estão seus projetos e cortes.</p></div>
+          <a href="importar.html" class="btn btn-primario"><i data-icone="mais"></i> Novo projeto</a>
+        </div>
+
+        <section class="estatisticas" aria-label="Resumo">
+          <div class="estat cartao"><div class="estat-topo">Créditos<i data-icone="raio"></i></div><strong id="estCreditos">0</strong><small class="neutro" id="estPlano">Plano</small></div>
+          <div class="estat cartao"><div class="estat-topo">Cortes gerados<i data-icone="tesoura"></i></div><strong id="estCortes">20</strong><small id="estCortesInfo">+12 esta semana</small></div>
+          <div class="estat cartao"><div class="estat-topo">Views em 30 dias<i data-icone="olho"></i></div><strong id="estViews">323 mil</strong><small id="estViewsInfo">+41% vs. mês passado</small></div>
+          <div class="estat cartao"><div class="estat-topo">Publicados<i data-icone="enviar"></i></div><strong id="estPub">7</strong><small class="neutro" id="estPubInfo">em 3 redes</small></div>
+        </section>
+
+        <div class="envio-rapido cartao">
+          <div class="icone-grande"><i data-icone="upload"></i></div>
+          <div><h2>Transforme um vídeo em cortes</h2><p>Envie um arquivo ou cole o link da sua live, podcast ou vídeo.</p></div>
+          <a href="importar.html" class="btn btn-primario">Começar <i data-icone="seta"></i></a>
+        </div>
+
+        <div class="grade-painel">
+          <section class="bloco cartao">
+            <div class="bloco-cabeca"><h2>Projetos recentes</h2><a href="importar.html">+ Novo</a></div>
+            <div class="projetos" id="listaProjetos"></div>
+          </section>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <section class="bloco cartao">
+              <div class="bloco-cabeca"><h2>Melhores cortes</h2><a href="editor.html">Abrir editor</a></div>
+              <div class="cortes-grade" id="cortesDestaque"></div>
+            </section>
+            <section class="bloco cartao">
+              <div class="bloco-cabeca"><h2>Desempenho</h2><span style="color:var(--text-3);font-size:13px">Últimos 7 dias</span></div>
+              <div class="mini-grafico"><span style="--h:30%"></span><span style="--h:45%"></span><span style="--h:38%"></span><span style="--h:62%"></span><span style="--h:55%"></span><span style="--h:78%"></span><span style="--h:95%"></span></div>
+              <div class="dias"><span>Sex</span><span>Sáb</span><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Hoje</span></div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app-real.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+/* =========================================================
+   CLIP STORAGE — Design system (cores, fontes, componentes)
+   ========================================================= */
+:root {
+  /* Cores */
+  --bg: #08070f;
+  --bg-2: #0e0c1a;
+  --surface: #141124;
+  --surface-2: #1b1730;
+  --border: rgba(167, 139, 250, 0.14);
+  --border-strong: rgba(167, 139, 250, 0.32);
+  --text: #f4f2ff;
+  --text-2: #b9b3d6;
+  --text-3: #7d769c;
+  --primary: #8b5cf6;
+  --primary-2: #a78bfa;
+  --primary-glow: rgba(139, 92, 246, 0.45);
+  --accent: #ff8a3d;
+  --accent-2: #ffb36b;
+  --success: #34d399;
+  --danger: #f87171;
+
+  /* Tipografia */
+  --font-title: "Sora", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Medidas */
+  --radius: 14px;
+  --radius-lg: 22px;
+  --container: 1180px;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3, h4 { font-family: var(--font-title); line-height: 1.15; letter-spacing: -0.02em; }
+
+.container { width: min(100% - 40px, var(--container)); margin-inline: auto; }
+.pular-conteudo {
+  position: absolute; left: -999px; top: 8px; z-index: 999;
+  background: var(--primary); padding: 8px 14px; border-radius: 8px;
+}
+.pular-conteudo:focus { left: 8px; }
+
+/* Texto em degradê */
+.grad {
+  background: linear-gradient(100deg, var(--primary-2), var(--accent) 90%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.etiqueta {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--primary-2);
+}
+.etiqueta::before { content: ""; width: 18px; height: 2px; background: var(--accent); border-radius: 2px; }
+.ilustrativo { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); text-align: center; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 22px; border-radius: 12px; border: 1px solid transparent;
+  font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn svg { width: 18px; height: 18px; }
+.btn-primario {
+  background: linear-gradient(135deg, var(--primary), #6d3df0);
+  box-shadow: 0 8px 30px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn-primario:hover { box-shadow: 0 10px 40px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.btn-destaque { background: linear-gradient(135deg, var(--accent), #ff6a1a); color: #1a0d02; box-shadow: 0 8px 30px rgba(255, 138, 61, 0.35); }
+.btn-contorno { border-color: var(--border-strong); background: rgba(255, 255, 255, 0.02); }
+.btn-contorno:hover { border-color: var(--primary-2); background: rgba(139, 92, 246, 0.08); }
+.btn-fantasma { color: var(--text-2); padding-inline: 12px; }
+.btn-fantasma:hover { color: var(--text); }
+.btn-bloco { width: 100%; }
+.btn-grande { padding: 15px 28px; font-size: 16px; border-radius: 14px; }
+
+/* ---------- Logo ---------- */
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-title); font-weight: 700; font-size: 19px; letter-spacing: -0.02em; }
+.logo svg { width: 32px; height: 32px; filter: drop-shadow(0 4px 14px var(--primary-glow)); }
+.logo span b { color: var(--primary-2); font-weight: 700; }
+
+/* ---------- Cartões ---------- */
+.cartao {
+  background: linear-gradient(180deg, var(--surface), var(--bg-2));
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+}
+
+/* ---------- Formulários ---------- */
+.campo { display: flex; flex-direction: column; gap: 8px; }
+.campo label { font-size: 14px; font-weight: 500; color: var(--text-2); }
+.entrada {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  padding: 0 14px; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.entrada:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.18); }
+.entrada svg { width: 18px; height: 18px; color: var(--text-3); flex-shrink: 0; }
+.entrada input, .entrada select { flex: 1; background: none; border: 0; outline: 0; padding: 13px 0; min-width: 0; }
+.entrada input::placeholder { color: var(--text-3); }
+.entrada.erro { border-color: var(--danger); }
+.msg-erro { font-size: 13px; color: var(--danger); min-height: 0; }
+.icone-btn { background: none; border: 0; cursor: pointer; color: var(--text-3); display: grid; place-items: center; }
+.icone-btn:hover { color: var(--text); }
+
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-2); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--primary); }
+
+/* ---------- Animação ao rolar ---------- */
+.revelar { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.revelar.visivel { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .revelar { opacity: 1; transform: none; transition: none; }
+  * { animation: none !important; }
+}
+
+/* Fundo com brilhos */
+.brilho-fundo { position: fixed; inset: 0; pointer-events: none; z-index: -1; overflow: hidden; }
+.brilho-fundo::before, .brilho-fundo::after {
+  content: ""; position: absolute; width: 60vw; height: 60vw; border-radius: 50%; filter: blur(120px); opacity: 0.22;
+}
+.brilho-fundo::before { background: var(--primary); top: -25vw; left: -15vw; }
+.brilho-fundo::after { background: var(--accent); bottom: -35vw; right: -20vw; opacity: 0.12; }
+
+/* Aviso flutuante (toast) */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 20px); opacity: 0;
+  background: var(--surface-2); border: 1px solid var(--border-strong); padding: 12px 18px; border-radius: 12px;
+  box-shadow: var(--shadow); font-size: 14px; z-index: 1000; transition: 0.3s; pointer-events: none;
+}
+.toast.mostrar { opacity: 1; transform: translate(-50%, 0); }
+
+.link { color: var(--primary-2); font-weight: 500; font-size: 14px; }
+.link:hover { color: var(--text); text-decoration: underline; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }

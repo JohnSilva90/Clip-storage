@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campeonatos — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="app" data-pagina="campeonatos">
+    <aside class="lateral" id="lateral"></aside>
+    <div class="principal">
+      <header class="topo-app" id="topoApp"></header>
+      <main class="conteudo-app" id="conteudo">
+        <div class="cabeca-pagina">
+          <div><h1>Arena de campeonatos</h1><p>Publique seus cortes, some visualizações e dispute prêmios em dinheiro.</p></div>
+        </div>
+        <div class="filtros">
+          <button class="filtro ativo" data-filtro="todos">Todos</button>
+          <button class="filtro" data-filtro="aberto">Abertos</button>
+          <button class="filtro" data-filtro="breve">Em breve</button>
+          <button class="filtro" data-filtro="encerrado">Encerrados</button>
+        </div>
+        <div class="camps" id="listaCamps"></div>
+
+        <section class="bloco cartao ranking-app">
+          <div class="bloco-cabeca"><h2>🏆 Ranking — Copa dos Cortes de Podcast</h2><span style="color:var(--text-3);font-size:13px">Atualizado a cada hora</span></div>
+          <ol id="listaRanking"></ol>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app-real.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

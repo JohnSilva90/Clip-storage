@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planos e créditos — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="app" data-pagina="assinatura">
+    <aside class="lateral" id="lateral"></aside>
+    <div class="principal">
+      <header class="topo-app" id="topoApp"></header>
+      <main class="conteudo-app" id="conteudo">
+        <div class="cabeca-pagina">
+          <div><h1>Planos e créditos</h1><p>1 crédito = 1 minuto de vídeo analisado pela IA.</p></div>
+        </div>
+
+        <div class="plano-atual">
+          <section class="bloco cartao">
+            <span class="selo-plano">Seu plano</span>
+            <h2 id="nomePlanoAtual"></h2>
+            <p style="color:var(--text-2);margin:4px 0 18px" id="precoPlanoAtual"></p>
+            <div class="uso-creditos">
+              <strong id="credAtual">0</strong> <span style="color:var(--text-3)">de <span id="credTotal">0</span> créditos do ciclo</span>
+              <div class="barra"><span id="barraUso"></span></div>
+              <small style="color:var(--text-3)">Os créditos do plano renovam todo mês.</small>
+            </div>
+            <button class="btn btn-fantasma" id="btnCancelar" hidden style="margin-top:14px;padding-left:0">Cancelar assinatura</button>
+          </section>
+          <section class="bloco cartao">
+            <h2 style="font-size:18px">Créditos avulsos</h2>
+            <p style="color:var(--text-2);font-size:14px;margin-top:4px">Acabaram os créditos? Compre um pacote. Eles não expiram.</p>
+            <div class="pacotes">
+              <button class="pacote" data-qtd="30" data-preco="R$ 9,90"><b>30</b><small>créditos</small><span>R$ 9,90</span></button>
+              <button class="pacote" data-qtd="100" data-preco="R$ 27,90"><b>100</b><small>créditos</small><span>R$ 27,90</span></button>
+              <button class="pacote" data-qtd="300" data-preco="R$ 74,90"><b>300</b><small>créditos</small><span>R$ 74,90</span></button>
+            </div>
+            <button class="btn btn-destaque btn-bloco" id="btnComprar" disabled style="margin-top:14px">Escolha um pacote</button>
+            <p style="color:var(--text-3);font-size:12px;margin-top:10px;text-align:center">🔒 Pagamento seguro pelo Mercado Pago: Pix, cartão ou boleto.</p>
+          </section>
+        </div>
+
+        <h2 style="font-size:22px;margin-bottom:16px">Mudar de plano</h2>
+        <div class="planos-app">
+          <article class="plano-app cartao" data-plano="explorador">
+            <h3>Explorador</h3><div class="preco">Grátis</div>
+            <ul><li><i data-icone="check"></i>8 créditos para testar</li><li><i data-icone="check"></i>Até 5 min por vídeo</li><li><i data-icone="check"></i>Com marca d'água</li><li><i data-icone="check"></i>1 processamento por vez</li></ul>
+            <button class="btn btn-contorno btn-bloco">Mudar para Explorador</button>
+          </article>
+          <article class="plano-app cartao" data-plano="criador">
+            <h3>Criador</h3><div class="preco">R$ 29,90 <small>/mês</small></div>
+            <ul><li><i data-icone="check"></i>100 créditos por mês</li><li><i data-icone="check"></i>Vídeos de até 1h20</li><li><i data-icone="check"></i>Sem marca d'água, 1080p</li><li><i data-icone="check"></i>Campeonatos liberados</li><li><i data-icone="check"></i>4 processamentos por vez</li></ul>
+            <button class="btn btn-primario btn-bloco">Assinar Criador</button>
+          </article>
+          <article class="plano-app cartao" data-plano="estudio">
+            <h3>Estúdio</h3><div class="preco">R$ 59,90 <small>/mês</small></div>
+            <ul><li><i data-icone="check"></i>250 créditos por mês</li><li><i data-icone="check"></i>Vídeos de até 4 horas</li><li><i data-icone="check"></i>Processamento prioritário</li><li><i data-icone="check"></i>Tudo do Criador</li><li><i data-icone="check"></i>10 processamentos por vez</li></ul>
+            <button class="btn btn-primario btn-bloco">Assinar Estúdio</button>
+          </article>
+        </div>
+
+        <section class="bloco cartao" style="margin-top:28px">
+          <div class="bloco-cabeca"><h2>Histórico de uso</h2></div>
+          <div style="overflow-x:auto">
+          <table class="tabela">
+            <thead><tr><th>Data</th><th>Projeto</th><th>Minutos</th><th>Créditos</th></tr></thead>
+            <tbody>
+              <tr><td>Hoje</td><td><b>Podcast Ep. 42</b></td><td>52</td><td>-52</td></tr>
+              <tr><td>Hoje</td><td><b>Live de sexta — Especial 100 mil</b></td><td>85</td><td>-85</td></tr>
+              <tr><td>Ontem</td><td><b>Aula: marketing para iniciantes</b></td><td>38</td><td>-38</td></tr>
+              <tr><td>01/11</td><td><b>Renovação do plano</b></td><td>—</td><td style="color:var(--success)">+250</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app-real.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clip Storage — Um vídeo entra. Dezenas de cortes saem.</title>
+  <meta name="description" content="Envie sua live, podcast ou vídeo do YouTube. A IA do Clip Storage encontra os melhores momentos, corta, legenda e guarda tudo pronto para postar.">
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="brilho-fundo" aria-hidden="true"></div>
+
+  <!-- ================= CABEÇALHO ================= -->
+  <header class="topo" id="topo">
+    <div class="container topo-inner">
+      <a href="index.html" class="logo" aria-label="Clip Storage, início">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d3df0"/></linearGradient></defs><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="url(#lg)"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg>
+        <span>Clip<b>Storage</b></span>
+      </a>
+      <nav class="menu" id="menu" aria-label="Principal">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#arena">Campeonatos</a>
+        <a href="#planos">Planos</a>
+        <a href="#duvidas">Dúvidas</a>
+        <div class="menu-acoes-mobile">
+          <a href="login.html" class="btn btn-contorno btn-bloco">Entrar</a>
+          <a href="cadastro.html" class="btn btn-primario btn-bloco">Começar grátis</a>
+        </div>
+      </nav>
+      <div class="topo-acoes">
+        <a href="login.html" class="btn btn-fantasma">Entrar</a>
+        <a href="cadastro.html" class="btn btn-primario">Começar grátis <i data-icone="seta"></i></a>
+      </div>
+      <button class="menu-botao icone-btn" id="menuBotao" aria-label="Abrir menu" aria-expanded="false"><i data-icone="menu"></i></button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="container hero-texto">
+        <span class="selo"><i data-icone="brilho"></i> Cortes com inteligência artificial</span>
+        <h1>Um vídeo entra.<br><span class="grad">Dezenas de cortes saem.</span></h1>
+        <p class="hero-sub">Envie sua live, podcast ou vídeo do YouTube. A IA do Clip Storage encontra os melhores momentos, corta, legenda e guarda tudo pronto para postar.</p>
+        <div class="hero-ctas">
+          <a href="cadastro.html" class="btn btn-primario btn-grande">Transformar meu vídeo <i data-icone="seta"></i></a>
+          <a href="#como-funciona" class="btn btn-contorno btn-grande"><i data-icone="play"></i> Ver como funciona</a>
+        </div>
+        <p class="hero-nota"><i data-icone="check"></i> 8 créditos grátis &nbsp;·&nbsp; <i data-icone="check"></i> Sem cartão de crédito</p>
+      </div>
+
+      <!-- Palco animado -->
+      <div class="container">
+        <div class="palco" aria-hidden="true">
+          <div class="palco-video">
+            <div class="pv-topo"><span class="pv-ponto ao-vivo"></span> live-de-sexta.mp4 <span class="pv-tempo">1:24:08</span></div>
+            <div class="pv-tela">
+              <div class="pv-onda"></div>
+              <div class="pv-scan"></div>
+            </div>
+            <div class="pv-linha">
+              <span class="pv-trecho t1"></span><span class="pv-trecho t2"></span><span class="pv-trecho t3"></span><span class="pv-trecho t4"></span>
+              <span class="pv-cursor"></span>
+            </div>
+            <div class="pv-rotulo"><i data-icone="brilho"></i> IA encontrou <b>4 momentos</b></div>
+          </div>
+
+          <div class="palco-caixa">
+            <div class="caixa-raios"></div>
+            <div class="caixa">
+              <div class="caixa-tampa"></div>
+              <div class="caixa-corpo"><i data-icone="play"></i></div>
+            </div>
+            <div class="caixa-base"></div>
+            <span class="caixa-rotulo">CLIP STORAGE</span>
+          </div>
+
+          <div class="palco-cortes">
+            <div class="corte c1"><span class="corte-legenda">ELE NÃO<br><b>ACREDITOU</b></span><span class="corte-views"><i data-icone="olho"></i> 184 mil</span></div>
+            <div class="corte c2"><span class="corte-legenda">O SEGREDO<br><b>É ESSE</b></span><span class="corte-views"><i data-icone="olho"></i> 92 mil</span></div>
+            <div class="corte c3"><span class="corte-legenda">MELHOR<br><b>MOMENTO</b></span><span class="corte-views"><i data-icone="olho"></i> 47 mil</span></div>
+          </div>
+        </div>
+        <p class="ilustrativo">Prévia ilustrativa</p>
+      </div>
+
+      <div class="container plataformas">
+        <span>Importe e publique em</span>
+        <ul>
+          <li><i data-icone="youtube"></i> YouTube</li>
+          <li><i data-icone="radio"></i> Twitch</li>
+          <li><i data-icone="radio"></i> Kick</li>
+          <li><i data-icone="musica"></i> TikTok</li>
+          <li><i data-icone="camera"></i> Instagram</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= COMO FUNCIONA ================= -->
+    <section class="secao" id="como-funciona">
+      <div class="container">
+        <div class="secao-cabeca revelar">
+          <span class="etiqueta">Como funciona</span>
+          <h2>Do vídeo longo ao corte pronto,<br>em três passos.</h2>
+        </div>
+
+        <ol class="passos">
+          <li class="passo cartao revelar"><span class="passo-num">01</span><i data-icone="upload"></i><h3>Envie</h3><p>Suba o arquivo ou cole o link da live, do podcast ou do vídeo.</p></li>
+          <li class="passo cartao revelar"><span class="passo-num">02</span><i data-icone="brilho"></i><h3>A IA garimpa</h3><p>Ela ouve tudo, encontra os momentos mais fortes e já corta em vertical.</p></li>
+          <li class="passo cartao revelar"><span class="passo-num">03</span><i data-icone="enviar"></i><h3>Publique</h3><p>Ajuste no editor e poste direto no TikTok, Instagram e YouTube.</p></li>
+        </ol>
+
+        <!-- Demonstração interativa -->
+        <div class="demo cartao revelar">
+          <div class="demo-texto">
+            <span class="etiqueta">Passo 01 · Envie</span>
+            <h3>Traga o vídeo do jeito que for mais fácil.</h3>
+            <p>Arquivo do computador, link direto ou YouTube, Twitch e Kick. Antes de começar, o Clip Storage mostra quantos créditos a análise vai usar.</p>
+            <ul class="lista-check">
+              <li><i data-icone="check"></i> 1 crédito = 1 minuto analisado</li>
+              <li><i data-icone="check"></i> Escolha só o trecho que interessa</li>
+              <li><i data-icone="check"></i> Vídeos de até 4 horas</li>
+            </ul>
+          </div>
+          <div class="demo-painel">
+            <div class="abas" role="tablist">
+              <button class="aba ativa" role="tab" data-aba="arquivo"><i data-icone="pasta"></i> Arquivo</button>
+              <button class="aba" role="tab" data-aba="link"><i data-icone="link"></i> Link</button>
+              <button class="aba" role="tab" data-aba="youtube"><i data-icone="youtube"></i> YouTube</button>
+            </div>
+            <div class="demo-arquivo">
+              <div class="demo-icone"><i data-icone="filme"></i></div>
+              <div>
+                <strong id="demoNome">live-de-sexta.mp4</strong>
+                <span id="demoInfo">1h 24min · 2,1 GB</span>
+              </div>
+            </div>
+            <div class="demo-trecho">
+              <div class="demo-trecho-topo"><span>Trecho para analisar</span><b id="demoMin">85 min</b></div>
+              <input type="range" id="demoRange" min="5" max="85" value="85" aria-label="Minutos para analisar">
+              <div class="demo-trecho-escala"><span>0:00</span><span>1:24:08</span></div>
+            </div>
+            <div class="demo-custo">
+              <span>Custo estimado</span>
+              <strong><span id="demoCreditos">85</span> créditos</strong>
+            </div>
+            <p class="ilustrativo">Prévia ilustrativa</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RECURSOS ================= -->
+    <section class="secao" id="recursos">
+      <div class="container">
+        <div class="secao-cabeca revelar">
+          <span class="etiqueta">Para criadores</span>
+          <h2>Tudo o que vem depois do corte,<br>guardado no mesmo lugar.</h2>
+        </div>
+
+        <div class="recursos">
+          <!-- Editor -->
+          <article class="recurso cartao revelar">
+            <div class="recurso-visual editor-mini">
+              <div class="celular">
+                <div class="celular-tela">
+                  <span class="celular-user">@seucanal</span>
+                  <span class="legenda-demo estilo-destaque" id="legendaDemo">ISSO MUDOU<br><b>TUDO</b></span>
+                </div>
+              </div>
+              <div class="editor-opcoes">
+                <span class="mini-titulo">Estilo da legenda</span>
+                <div class="chips" id="chipsLegenda">
+                  <button class="chip ativo" data-estilo="destaque">Destaque</button>
+                  <button class="chip" data-estilo="classica">Clássica</button>
+                  <button class="chip" data-estilo="neon">Neon</button>
+                </div>
+                <span class="mini-titulo">Formato</span>
+                <div class="chips"><span class="chip ativo">9:16</span><span class="chip">1:1</span><span class="chip">16:9</span></div>
+              </div>
+            </div>
+            <h3>Editor de cortes</h3>
+            <p>Legendas automáticas com estilos, formato para cada rede, sua marca e ajuste fino do começo e do fim.</p>
+          </article>
+
+          <!-- Publicação -->
+          <article class="recurso cartao revelar">
+            <div class="recurso-visual redes">
+              <div class="rede"><span class="rede-icone tt"><i data-icone="musica"></i></span><div><b>TikTok</b><small>@seucanal</small></div><span class="conectado">Conectado</span></div>
+              <div class="rede"><span class="rede-icone ig"><i data-icone="camera"></i></span><div><b>Instagram</b><small>@seucanal</small></div><span class="conectado">Conectado</span></div>
+              <div class="rede"><span class="rede-icone yt"><i data-icone="youtube"></i></span><div><b>YouTube</b><small>Seu Canal</small></div><span class="conectado">Conectado</span></div>
+              <button class="btn btn-primario btn-bloco" id="btnPublicarDemo"><i data-icone="enviar"></i> Publicar em 3 redes</button>
+            </div>
+            <h3>Publicação direta</h3>
+            <p>Conecte suas redes uma vez e publique o corte sem sair do Clip Storage.</p>
+          </article>
+
+          <!-- Desempenho -->
+          <article class="recurso cartao revelar">
+            <div class="recurso-visual grafico">
+              <div class="grafico-topo"><span>Views em 30 dias</span><b>2,4 mi <em>+41%</em></b></div>
+              <div class="barras">
+                <span style="--h:35%"></span><span style="--h:52%"></span><span style="--h:44%"></span><span style="--h:68%"></span><span style="--h:58%"></span><span style="--h:82%"></span><span style="--h:74%"></span><span style="--h:96%"></span>
+              </div>
+              <div class="grafico-legenda"><span><i class="bola tt"></i> TikTok</span><span><i class="bola ig"></i> Instagram</span><span><i class="bola yt"></i> YouTube</span></div>
+            </div>
+            <h3>Painel de desempenho</h3>
+            <p>Veja as visualizações de cada corte publicado, por rede, e descubra o que funciona.</p>
+          </article>
+        </div>
+        <p class="ilustrativo">Prévia ilustrativa</p>
+      </div>
+    </section>
+
+    <!-- ================= ARENA / CAMPEONATOS ================= -->
+    <section class="secao" id="arena">
+      <div class="container arena cartao revelar">
+        <div class="arena-texto">
+          <span class="etiqueta">Arena Clip Storage</span>
+          <h2>Cortou. Postou.<br><span class="grad">Faturou.</span></h2>
+          <p>Participe dos campeonatos, publique seus cortes e dispute o ranking por visualizações. Os melhores colocados levam prêmios em dinheiro.</p>
+          <ol class="arena-passos">
+            <li><span>1</span><div><b>Inscreva-se</b>Escolha um campeonato aberto.</div></li>
+            <li><span>2</span><div><b>Crie e publique</b>Gere os cortes e poste nas suas redes.</div></li>
+            <li><span>3</span><div><b>Envie o link</b>Cada vídeo aprovado soma views no ranking.</div></li>
+          </ol>
+          <a href="campeonatos.html" class="btn btn-destaque">Ver campeonatos <i data-icone="trofeu"></i></a>
+        </div>
+        <div class="ranking">
+          <div class="ranking-topo"><span><i data-icone="trofeu"></i> Ranking ao vivo</span><small>Termina em 4d 12h</small></div>
+          <ol>
+            <li class="r1"><span class="pos">1</span><span class="avatar" style="--c:#8b5cf6">MC</span><b>@mariacortes</b><span class="r-views">1,2 mi</span><span class="premio">R$ 1.500</span></li>
+            <li class="r2"><span class="pos">2</span><span class="avatar" style="--c:#ff8a3d">LP</span><b>@lucas.podcuts</b><span class="r-views">870 mil</span><span class="premio">R$ 800</span></li>
+            <li class="r3"><span class="pos">3</span><span class="avatar" style="--c:#34d399">JV</span><b>@jvclips</b><span class="r-views">640 mil</span><span class="premio">R$ 400</span></li>
+            <li><span class="pos">4</span><span class="avatar" style="--c:#60a5fa">AN</span><b>@anacortez</b><span class="r-views">512 mil</span></li>
+            <li class="voce"><span class="pos">12</span><span class="avatar" style="--c:#a78bfa">VC</span><b>Você</b><span class="r-views">98 mil</span></li>
+          </ol>
+          <p class="ilustrativo">Prévia ilustrativa</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PLANOS ================= -->
+    <section class="secao" id="planos">
+      <div class="container">
+        <div class="secao-cabeca revelar">
+          <span class="etiqueta">Planos</span>
+          <h2>Escolha quanto espaço<br>seu conteúdo precisa.</h2>
+          <p>Comece de graça e evolua quando quiser. 1 crédito = 1 minuto de vídeo analisado pela IA.</p>
+          <div class="ciclo" role="group" aria-label="Ciclo de cobrança">
+            <button class="ciclo-btn ativo" data-ciclo="mensal">Mensal</button>
+            <button class="ciclo-btn" data-ciclo="anual">Anual <em>-20%</em></button>
+          </div>
+        </div>
+
+        <div class="planos">
+          <article class="plano cartao revelar">
+            <h3>Explorador</h3>
+            <p class="plano-desc">Para testar o Clip Storage sem pagar nada.</p>
+            <div class="preco"><strong>Grátis</strong></div>
+            <p class="preco-anual">&nbsp;</p>
+            <a href="cadastro.html" class="btn btn-contorno btn-bloco">Começar grátis</a>
+            <ul class="lista-check">
+              <li><i data-icone="check"></i> 8 créditos para testar, uma única vez</li>
+              <li><i data-icone="check"></i> Até 5 minutos de vídeo analisados</li>
+              <li><i data-icone="check"></i> Cortes reais, com marca d'água</li>
+              <li><i data-icone="check"></i> Conheça o editor completo</li>
+              <li><i data-icone="check"></i> Sem cartão de crédito</li>
+              <li><i data-icone="check"></i> 1 processamento por vez</li>
+            </ul>
+          </article>
+
+          <article class="plano cartao destaque revelar">
+            <span class="plano-selo">Mais escolhido</span>
+            <h3>Criador</h3>
+            <p class="plano-desc">Para quem publica toda semana e quer constância.</p>
+            <div class="preco" data-mensal="29,90" data-anual="23,90"><span>R$</span><strong>29,90</strong><small>/mês</small></div>
+            <p class="preco-anual">Cobrado anualmente: R$ 286,80</p>
+            <a href="cadastro.html?plano=criador" class="btn btn-primario btn-bloco">Começar agora</a>
+            <ul class="lista-check">
+              <li><i data-icone="check"></i> 100 créditos por mês</li>
+              <li><i data-icone="check"></i> Vídeos de até 1h20</li>
+              <li><i data-icone="check"></i> Até 30 cortes por vídeo</li>
+              <li><i data-icone="check"></i> Sem marca d'água, em 1080p</li>
+              <li><i data-icone="check"></i> Legendas automáticas</li>
+              <li><i data-icone="check"></i> Participação em campeonatos</li>
+              <li><i data-icone="check"></i> 4 processamentos por vez</li>
+            </ul>
+          </article>
+
+          <article class="plano cartao revelar">
+            <h3>Estúdio</h3>
+            <p class="plano-desc">Para quem processa muito e quer prioridade.</p>
+            <div class="preco" data-mensal="59,90" data-anual="47,90"><span>R$</span><strong>59,90</strong><small>/mês</small></div>
+            <p class="preco-anual">Cobrado anualmente: R$ 574,80</p>
+            <a href="cadastro.html?plano=estudio" class="btn btn-contorno btn-bloco">Começar agora</a>
+            <ul class="lista-check">
+              <li><i data-icone="check"></i> 250 créditos por mês</li>
+              <li><i data-icone="check"></i> Vídeos de até 4 horas</li>
+              <li><i data-icone="check"></i> Até 50 cortes por vídeo</li>
+              <li><i data-icone="check"></i> Processamento prioritário</li>
+              <li><i data-icone="check"></i> Tudo do plano Criador</li>
+              <li><i data-icone="check"></i> Armazenamento ampliado</li>
+              <li><i data-icone="check"></i> 10 processamentos por vez</li>
+            </ul>
+          </article>
+        </div>
+        <p class="planos-nota">Pagamento em ambiente seguro. Cancele quando quiser.</p>
+      </div>
+    </section>
+
+    <!-- ================= DÚVIDAS ================= -->
+    <section class="secao" id="duvidas">
+      <div class="container duvidas">
+        <div class="secao-cabeca esquerda revelar">
+          <span class="etiqueta">Dúvidas</span>
+          <h2>Antes de abrir<br>seu storage.</h2>
+          <p>Respostas rápidas para você começar com segurança.</p>
+        </div>
+        <div class="faq revelar">
+          <details>
+            <summary>Que vídeos posso usar?</summary>
+            <p>Lives, podcasts, aulas, vlogs e vídeos do YouTube, Twitch ou Kick. Você pode enviar o arquivo ou colar o link. Use apenas conteúdo seu ou que você tem permissão para usar.</p>
+          </details>
+          <details>
+            <summary>Quanto tempo demora?</summary>
+            <p>Na maioria dos casos, poucos minutos. Um vídeo de 1 hora costuma ficar pronto em até 10 minutos. Você recebe um aviso quando os cortes estiverem prontos.</p>
+          </details>
+          <details>
+            <summary>Posso editar os cortes?</summary>
+            <p>Sim. No editor você ajusta início e fim, troca o estilo da legenda, muda o formato (9:16, 1:1 ou 16:9) e adiciona sua marca.</p>
+          </details>
+          <details>
+            <summary>Como funcionam os créditos?</summary>
+            <p>1 crédito equivale a 1 minuto de vídeo analisado. Os créditos dos planos pagos renovam a cada ciclo. Antes de cada análise, mostramos o custo exato.</p>
+          </details>
+          <details>
+            <summary>Como participo dos campeonatos?</summary>
+            <p>Assinantes dos planos Criador e Estúdio podem se inscrever nos campeonatos abertos, publicar os cortes e enviar os links. O ranking é por visualizações e os primeiros colocados ganham prêmios.</p>
+          </details>
+          <details>
+            <summary>Posso cancelar quando quiser?</summary>
+            <p>Sim, sem multa. Você continua com acesso até o fim do período já pago.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA FINAL ================= -->
+    <section class="secao">
+      <div class="container cta-final revelar">
+        <span class="etiqueta">Próximo passo</span>
+        <h2>Seu próximo corte viral<br><span class="grad">já foi gravado.</span></h2>
+        <p>Ele está em algum ponto da sua última live. Deixe o Clip Storage encontrar.</p>
+        <a href="cadastro.html" class="btn btn-primario btn-grande">Transformar meu vídeo <i data-icone="seta"></i></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= RODAPÉ ================= -->
+  <footer class="rodape">
+    <div class="container rodape-inner">
+      <div>
+        <a href="index.html" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="#7c4df3"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg><span>Clip<b>Storage</b></span></a>
+        <p>Cortes com IA para criadores de conteúdo.</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#planos">Planos</a>
+        <a href="campeonatos.html">Campeonatos</a>
+        <a href="termos.html">Termos de uso</a>
+        <a href="privacidade.html">Privacidade</a>
+      </nav>
+    </div>
+    <div class="container rodape-base">© 2026 Clip Storage. Projeto desenvolvido por John Herbet Silva Trindade.</div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

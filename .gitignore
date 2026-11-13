@@ -1,0 +1,9 @@
+# Nunca subir: chaves, banco, vídeos e ambiente Python
+.env
+backend/dados/
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+Thumbs.db

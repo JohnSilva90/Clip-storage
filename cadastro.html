@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar conta — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="auth">
+    <!-- Lado visual -->
+    <aside class="auth-visual" aria-hidden="true">
+      <a href="index.html" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="#7c4df3"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg><span>Clip<b>Storage</b></span></a>
+      <div>
+        <h1>Abra seu storage <span class="grad">em 30 segundos.</span></h1>
+        <p>Comece com 8 créditos grátis. Sem cartão de crédito.</p>
+        <div class="auth-mural">
+          <div class="mural-corte m1"><span>ELE NÃO<br><b>ACREDITOU</b></span></div>
+          <div class="mural-corte m2"><span>O SEGREDO<br><b>É ESSE</b></span></div>
+          <div class="mural-corte m3"><span>MELHOR<br><b>MOMENTO</b></span></div>
+        </div>
+        <ul class="auth-lista">
+          <li><i data-icone="check"></i> A IA encontra os melhores momentos</li>
+          <li><i data-icone="check"></i> Legendas automáticas em português</li>
+          <li><i data-icone="check"></i> Publique no TikTok, Instagram e YouTube</li>
+        </ul>
+      </div>
+      <small style="color:var(--text-3)">© 2026 Clip Storage</small>
+    </aside>
+
+    <!-- Lado do formulário -->
+    <main class="auth-form-lado" id="conteudo">
+      <div class="auth-topo-mobile"><a href="index.html" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="#7c4df3"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg><span>Clip<b>Storage</b></span></a></div>
+      <a href="index.html" class="auth-voltar"><i data-icone="voltar"></i> Voltar ao início</a>
+      <div class="auth-caixa">
+        <h2>Crie sua conta</h2>
+        <p class="sub">Grátis para começar. Você ganha 8 créditos de boas-vindas.</p>
+        <form class="auth-form" id="formCadastro" novalidate>
+          <div class="plano-escolhido" id="planoEscolhido" hidden><i data-icone="estrela"></i> Plano escolhido: <b id="planoNome"></b></div>
+          <div class="campo">
+            <label for="nome">Nome</label>
+            <div class="entrada"><i data-icone="usuario"></i><input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required></div>
+            <span class="msg-erro" data-erro="nome"></span>
+          </div>
+          <div class="campo">
+            <label for="email">E-mail</label>
+            <div class="entrada"><i data-icone="email"></i><input type="email" id="email" name="email" placeholder="voce@email.com" autocomplete="email" required></div>
+            <span class="msg-erro" data-erro="email"></span>
+          </div>
+          <div class="campo">
+            <label for="senha">Senha</label>
+            <div class="entrada"><i data-icone="cadeado"></i><input type="password" id="senha" name="senha" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" required><button type="button" class="icone-btn ver-senha" aria-label="Mostrar senha"><i data-icone="olho"></i></button></div>
+            <div class="forca" id="forca" data-nivel="0"><span></span><span></span><span></span><span></span></div>
+            <span class="forca-texto" id="forcaTexto">Use letras, números e símbolos.</span>
+            <span class="msg-erro" data-erro="senha"></span>
+          </div>
+          <label class="check"><input type="checkbox" name="termos" id="termos"> Li e aceito os <a href="termos.html" class="link" target="_blank">termos de uso</a> e a <a href="privacidade.html" class="link" target="_blank">política de privacidade</a></label>
+          <span class="msg-erro" data-erro="termos"></span>
+          <button type="submit" class="btn btn-primario btn-bloco btn-grande">Criar conta grátis <i data-icone="seta"></i></button>
+          <div class="divisor">ou</div>
+          <button type="button" class="btn btn-google btn-bloco" data-google><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 01-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3a7.2 7.2 0 01-10.8-3.8h-4v3.1A12 12 0 0012 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 010-4.6V6.6h-4a12 12 0 000 10.8z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 001.3 6.6l4 3.1A7.2 7.2 0 0112 4.8z"/></svg> Cadastrar com Google</button>
+        </form>
+        <p class="auth-rodape">Já tem conta? <a href="login.html" class="link">Entrar</a></p>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>

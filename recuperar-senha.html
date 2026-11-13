@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recuperar senha — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="auth">
+    <!-- Lado visual -->
+    <aside class="auth-visual" aria-hidden="true">
+      <a href="index.html" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="#7c4df3"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg><span>Clip<b>Storage</b></span></a>
+      <div>
+        <h1>Esqueceu a senha? <span class="grad">Acontece.</span></h1>
+        <p>A gente te manda um link para criar uma nova em segundos.</p>
+        <div class="auth-mural">
+          <div class="mural-corte m1"><span>ELE NÃO<br><b>ACREDITOU</b></span></div>
+          <div class="mural-corte m2"><span>O SEGREDO<br><b>É ESSE</b></span></div>
+          <div class="mural-corte m3"><span>MELHOR<br><b>MOMENTO</b></span></div>
+        </div>
+        <ul class="auth-lista">
+          <li><i data-icone="check"></i> A IA encontra os melhores momentos</li>
+          <li><i data-icone="check"></i> Legendas automáticas em português</li>
+          <li><i data-icone="check"></i> Publique no TikTok, Instagram e YouTube</li>
+        </ul>
+      </div>
+      <small style="color:var(--text-3)">© 2026 Clip Storage</small>
+    </aside>
+
+    <!-- Lado do formulário -->
+    <main class="auth-form-lado" id="conteudo">
+      <div class="auth-topo-mobile"><a href="index.html" class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="2" width="12" height="3" rx="1.5" fill="#a78bfa" opacity=".35"/><rect x="6.5" y="5.5" width="19" height="3.5" rx="1.75" fill="#a78bfa" opacity=".6"/><rect x="3" y="10" width="26" height="20" rx="6" fill="#7c4df3"/><path d="M13.5 15.5v9l7.5-4.5z" fill="#fff"/><circle cx="25" cy="13.5" r="1.6" fill="#ff8a3d"/></svg><span>Clip<b>Storage</b></span></a></div>
+      <a href="index.html" class="auth-voltar"><i data-icone="voltar"></i> Voltar ao início</a>
+      <div class="auth-caixa">
+        <div id="etapaPedido">
+          <h2>Recuperar senha</h2>
+          <p class="sub">Digite o e-mail da sua conta e enviaremos um link para criar uma nova senha.</p>
+          <form class="auth-form" id="formRecuperar" novalidate>
+            <div class="campo">
+              <label for="email">E-mail</label>
+              <div class="entrada"><i data-icone="email"></i><input type="email" id="email" name="email" placeholder="voce@email.com" autocomplete="email" required></div>
+              <span class="msg-erro" data-erro="email"></span>
+            </div>
+            <button type="submit" class="btn btn-primario btn-bloco btn-grande">Enviar link <i data-icone="enviar"></i></button>
+          </form>
+        </div>
+        <div id="etapaEnviado" class="sucesso" hidden>
+          <div class="sucesso-icone"><i data-icone="email"></i></div>
+          <h2>Confira seu e-mail</h2>
+          <p class="sub">Se existir uma conta com <b id="emailEnviado"></b>, você vai receber o link em alguns minutos. Veja também a caixa de spam.</p>
+          <a href="login.html" class="btn btn-primario btn-bloco">Voltar para o login</a>
+        </div>
+        <p class="auth-rodape">Lembrou a senha? <a href="login.html" class="link">Entrar</a></p>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Transcrição de áudio (opcional: sem ela, o Clip Storage funciona sem legendas)
+faster-whisper>=1.0

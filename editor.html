@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor de cortes — Clip Storage</title>
+  <meta name="theme-color" content="#08070f">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <style id="estiloDinamico"></style>
+</head>
+<body>
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+  <div class="app" data-pagina="editor">
+    <aside class="lateral" id="lateral"></aside>
+    <div class="principal">
+      <header class="topo-app" id="topoApp"></header>
+      <main class="conteudo-app" id="conteudo">
+        <div class="cabeca-pagina">
+          <div><h1>Editor de cortes</h1><p>Live de sexta — Especial 100 mil · <span id="tituloCorte"></span></p></div>
+        </div>
+
+        <div class="editor">
+          <nav class="lista-cortes cartao" id="listaCortes" aria-label="Cortes do projeto">
+            <h2>Cortes <span id="totalCortes"></span></h2>
+          </nav>
+
+          <section class="area-preview">
+            <div class="preview-video" id="previewVideo" data-formato="9:16">
+              <div class="preview-cena" id="previewCena"></div>
+              <span class="preview-marca" id="previewMarca">Clip Storage</span>
+              <div class="preview-legenda" id="legenda"></div>
+              <div class="preview-controles">
+                <button class="icone-btn" id="btnPlay" aria-label="Tocar"><i data-icone="play"></i></button>
+                <div class="barra" id="barraPreviewFundo"><span id="barraPreview" style="width:0"></span></div>
+                <span class="tempo" id="tempoAtual">0:00</span>
+              </div>
+            </div>
+            <div class="linha-tempo cartao">
+              <div class="linha-tempo-topo"><span>Arraste as alças para ajustar o corte</span><b id="infoTrecho"></b></div>
+              <div class="trilha" id="trilha">
+                <div class="trilha-selecao" id="selecao"><span class="alca ini" role="slider" aria-label="Início do corte"></span><span class="alca fim" role="slider" aria-label="Fim do corte"></span></div>
+                <span class="trilha-cursor" id="cursorTrilha"></span>
+              </div>
+              <div class="escala"><span>0:00</span><span>trecho do vídeo original</span><span id="escalaFim"></span></div>
+            </div>
+          </section>
+
+          <aside class="painel-estilo cartao">
+            <h2>Personalizar</h2>
+            <div class="grupo-opcao"><span>Estilo da legenda</span>
+              <div class="opcoes" id="optEstilo"><button class="opcao ativa" data-valor="destaque">Destaque</button><button class="opcao" data-valor="classica">Clássica</button><button class="opcao" data-valor="neon">Neon</button></div></div>
+            <div class="grupo-opcao"><span>Cor de destaque</span>
+              <div class="cores"><button class="cor ativa" style="--c:#ffd84d" data-cor="#ffd84d" aria-label="Amarelo"></button><button class="cor" style="--c:#ff8a3d" data-cor="#ff8a3d" aria-label="Laranja"></button><button class="cor" style="--c:#a78bfa" data-cor="#a78bfa" aria-label="Roxo"></button><button class="cor" style="--c:#34d399" data-cor="#34d399" aria-label="Verde"></button><button class="cor" style="--c:#60a5fa" data-cor="#60a5fa" aria-label="Azul"></button></div></div>
+            <div class="grupo-opcao"><span>Posição</span>
+              <div class="opcoes" id="optPosicao"><button class="opcao" data-valor="cima">Topo</button><button class="opcao" data-valor="meio">Meio</button><button class="opcao ativa" data-valor="baixo">Baixo</button></div></div>
+            <div class="grupo-opcao"><span>Formato</span>
+              <div class="opcoes" id="optFormato"><button class="opcao ativa" data-valor="9:16">9:16</button><button class="opcao" data-valor="1:1">1:1</button><button class="opcao" data-valor="16:9">16:9</button></div></div>
+            <div class="grupo-opcao"><span>Texto da legenda</span><textarea class="textarea" id="textoLegenda" aria-label="Texto da legenda"></textarea></div>
+            <label class="interruptor">Marca d'água <input type="checkbox" id="optMarca"></label>
+            <div class="botoes-editor">
+              <button class="btn btn-primario btn-bloco" id="btnPublicar"><i data-icone="enviar"></i> Publicar</button>
+              <button class="btn btn-contorno btn-bloco" id="btnBaixar"><i data-icone="baixar"></i> Baixar em 1080p</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="modal-fundo" id="modalPublicar" role="dialog" aria-modal="true" aria-labelledby="tituloModal">
+          <div class="modal">
+            <h2 id="tituloModal">Publicar corte</h2>
+            <p>Escolha onde o corte vai ser publicado.</p>
+            <label class="rede"><span class="rede-icone tt"><i data-icone="musica"></i></span><div><b>TikTok</b><small>@seucanal</small></div><input type="checkbox" data-rede="TikTok" checked></label>
+            <label class="rede"><span class="rede-icone ig"><i data-icone="camera"></i></span><div><b>Instagram Reels</b><small>@seucanal</small></div><input type="checkbox" data-rede="Instagram" checked></label>
+            <label class="rede"><span class="rede-icone yt"><i data-icone="youtube"></i></span><div><b>YouTube Shorts</b><small>Seu Canal</small></div><input type="checkbox" data-rede="YouTube"></label>
+            <div class="modal-botoes"><button class="btn btn-contorno" data-fechar>Cancelar</button><button class="btn btn-primario" id="btnConfirmarPub">Publicar agora</button></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/js/icones.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app-real.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
