@@ -462,12 +462,19 @@ window.AppReal = (function () {
       $('#credAtual').textContent = sessao.creditos;
       $('#credTotal').textContent = sessao.creditos_plano;
       $('#barraUso').style.width = Math.min(100, (sessao.creditos / sessao.creditos_plano) * 100) + '%';
-      $('#btnCancelar').hidden = sessao.plano === 'explorador';
+      const ate = sessao.plano_ate ? new Date(sessao.plano_ate).toLocaleDateString('pt-BR') : null;
+      $('#btnCancelar').hidden = sessao.plano === 'explorador' || !!ate;
+      let nota = $('#notaPlanoAte');
+      if (!nota) { nota = document.createElement('p'); nota.id = 'notaPlanoAte'; nota.style.color = 'var(--text-2, #a9a3c4)'; nota.style.fontSize = '.9rem';
+        nota.style.marginTop = '10px'; $('#btnCancelar').after(nota); }
+      nota.hidden = !ate;
+      nota.textContent = ate ? `Assinatura cancelada. Seu plano continua até ${ate}; depois volta para o grátis.` : '';
       $$('.plano-app').forEach((card) => {
         const ehAtual = card.dataset.plano === sessao.plano, btn = $('.btn', card);
         card.classList.toggle('atual', ehAtual);
-        btn.disabled = ehAtual;
-        btn.textContent = ehAtual ? 'Plano atual' : card.dataset.plano === 'explorador' ? 'Voltar ao grátis' : 'Assinar ' + $('h3', card).textContent;
+        btn.disabled = ehAtual && !ate;
+        btn.textContent = ehAtual ? (ate ? 'Reativar ' + $('h3', card).textContent : 'Plano atual')
+          : card.dataset.plano === 'explorador' ? 'Voltar ao grátis' : 'Assinar ' + $('h3', card).textContent;
       });
       atualizarCreditos();
     }
@@ -491,6 +498,7 @@ window.AppReal = (function () {
           const r = await API.get('/api/pagamentos/pedido/' + pedido);
           if (r.status === 'aprovado') { atualizarSessao(r.usuario); avisar('Pagamento confirmado! 🎉'); return; }
           if (r.status === 'recusado') { avisar('O pagamento não foi aprovado. Tente outra forma de pagamento.'); return; }
+          if (r.status === 'expirado') { avisar('Esse pagamento venceu. Faça um novo pedido.'); return; }
           if (++tentativas < 20) { if (tentativas === 1) avisar('Aguardando a confirmação do pagamento...'); setTimeout(conferir, 3000); }
           else avisar('Ainda não recebemos a confirmação. Se pagou com Pix, ela chega em alguns minutos.');
         } catch (e) { avisar(e.message); }
@@ -510,7 +518,7 @@ window.AppReal = (function () {
     }
 
     $$('.plano-app').forEach((card) => $('.btn', card).addEventListener('click', (e) => {
-      if (card.dataset.plano === 'explorador') return $('#btnCancelar').click();
+      if (card.dataset.plano === 'explorador') { if (sessao.plano_ate) return avisar('Seu plano já vai voltar ao grátis no fim do período pago.'); return $('#btnCancelar').click(); }
       irParaPagamento('/api/pagamentos/assinatura', { plano: card.dataset.plano }, e.currentTarget);
     }));
     $$('.pacote').forEach((pc) => pc.addEventListener('click', () => {
@@ -520,7 +528,7 @@ window.AppReal = (function () {
     }));
     $('#btnComprar').addEventListener('click', (e) => irParaPagamento('/api/pagamentos/creditos', { quantidade: +e.currentTarget.dataset.qtd }, e.currentTarget));
     $('#btnCancelar').addEventListener('click', async () => {
-      if (!window.confirm('Cancelar a assinatura e voltar para o plano grátis? Os créditos que sobraram continuam na conta.')) return;
+      if (!window.confirm('Cancelar a assinatura? Você não será mais cobrado e o plano continua até o fim do mês já pago.')) return;
       try { atualizarSessao(await API.post('/api/pagamentos/cancelar')); avisar('Assinatura cancelada.'); }
       catch (e) { avisar(e.message); }
     });

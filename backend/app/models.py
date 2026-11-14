@@ -21,6 +21,7 @@ class Usuario(Base):
     plano: Mapped[str] = mapped_column(String(20), default="explorador")
     creditos: Mapped[int] = mapped_column(Integer, default=8)
     assinatura_mp_id: Mapped[str | None] = mapped_column(String(60), nullable=True)  # assinatura ativa no Mercado Pago
+    plano_ate: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)  # cancelado: plano vale até esta data
     criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=agora)
 
     projetos: Mapped[list["Projeto"]] = relationship(back_populates="usuario", cascade="all, delete-orphan")
@@ -98,7 +99,7 @@ class Pedido(Base):
     plano: Mapped[str | None] = mapped_column(String(20), nullable=True)
     quantidade: Mapped[int] = mapped_column(Integer, default=0)   # créditos do pacote
     valor: Mapped[float] = mapped_column(Float)
-    status: Mapped[str] = mapped_column(String(20), default="pendente")  # pendente, aprovado, recusado, cancelado
+    status: Mapped[str] = mapped_column(String(20), default="pendente")  # pendente, aprovado, recusado, estornado, expirado
     mp_id: Mapped[str | None] = mapped_column(String(60), nullable=True)  # id do pagamento/assinatura no MP
     criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=agora)
     aprovado_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

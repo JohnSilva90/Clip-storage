@@ -5,7 +5,7 @@ CONFIRMA o pagamento (pelo webhook ou pela verificação na volta do checkout).
 """
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from pydantic import BaseModel
@@ -50,13 +50,35 @@ def liberar_creditos(banco: Session, pedido: Pedido, mp_id: str | None = None):
     log.info("Pedido %s aprovado: +%s créditos para o usuário %s", pedido.referencia, pedido.quantidade, pedido.usuario_id)
 
 
+def _utc(dt: datetime | None) -> datetime | None:
+    """O SQLite devolve datas sem fuso: trata como UTC."""
+    if dt is None:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+
+def _agora() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 def ativar_plano(banco: Session, pedido: Pedido, assinatura_id: str | None = None):
     usuario = pedido.usuario
+    # Aviso atrasado de uma assinatura antiga (o cliente já trocou de plano): ignora
+    if pedido.status == "aprovado" and assinatura_id and usuario.assinatura_mp_id not in (None, assinatura_id):
+        return
     if pedido.status != "aprovado":
-        pedido.status, pedido.aprovado_em = "aprovado", datetime.now(timezone.utc)
+        pedido.status, pedido.aprovado_em = "aprovado", _agora()
     if assinatura_id:
+        antiga = usuario.assinatura_mp_id
+        # Troca de plano: só cancela a assinatura antiga DEPOIS que a nova foi paga
+        if antiga and antiga != assinatura_id and antiga != "simulado" and not PAGAMENTO_SIMULADO:
+            try:
+                mp.cancelar_assinatura(antiga)
+            except mp.ErroPagamento as erro:
+                log.error("Não consegui cancelar a assinatura antiga %s: %s", antiga, erro)
         pedido.mp_id = assinatura_id
         usuario.assinatura_mp_id = assinatura_id
+    usuario.plano_ate = None
     if usuario.plano != pedido.plano:
         usuario.plano = pedido.plano
         renovar_creditos(banco, usuario, "Plano {} ativado")
@@ -72,9 +94,100 @@ def renovar_creditos(banco: Session, usuario: Usuario, descricao: str):
 
 
 def voltar_ao_gratis(banco: Session, usuario: Usuario):
-    usuario.plano, usuario.assinatura_mp_id = "explorador", None
+    usuario.plano, usuario.assinatura_mp_id, usuario.plano_ate = "explorador", None, None
     banco.add(MovimentoCredito(usuario=usuario, quantidade=0, descricao="Assinatura encerrada: plano Explorador"))
     banco.commit()
+
+
+def fim_do_periodo_pago(banco: Session, usuario: Usuario) -> datetime:
+    """Até quando o cliente já pagou: próxima cobrança no Mercado Pago, ou 30 dias após o último pagamento."""
+    agora = _agora()
+    if usuario.assinatura_mp_id and usuario.assinatura_mp_id != "simulado" and not PAGAMENTO_SIMULADO:
+        try:
+            proxima = mp.buscar_assinatura(usuario.assinatura_mp_id).get("next_payment_date")
+            if proxima:
+                data = _utc(datetime.fromisoformat(proxima.replace("Z", "+00:00")))
+                if data > agora:
+                    return min(data, agora + timedelta(days=31))
+        except (mp.ErroPagamento, ValueError) as erro:
+            log.warning("Sem data da próxima cobrança de %s: %s", usuario.assinatura_mp_id, erro)
+    ultimo = banco.scalar(select(MovimentoCredito.criado_em).where(
+        MovimentoCredito.usuario_id == usuario.id,
+        MovimentoCredito.descricao.like("Plano % ativado") | MovimentoCredito.descricao.like("Renovação mensal%"),
+    ).order_by(MovimentoCredito.criado_em.desc()))
+    return max(agora, _utc(ultimo) + timedelta(days=30)) if ultimo else agora
+
+
+def encerrar_no_fim_do_periodo(banco: Session, usuario: Usuario):
+    """Cancelou: o plano continua até o fim do mês já pago e depois volta ao grátis."""
+    ate = fim_do_periodo_pago(banco, usuario)
+    if ate <= _agora() + timedelta(minutes=1):
+        return voltar_ao_gratis(banco, usuario)
+    usuario.plano_ate, usuario.assinatura_mp_id = ate, None
+    banco.add(MovimentoCredito(usuario=usuario, quantidade=0,
+                               descricao=f"Assinatura cancelada: plano {PLANOS[usuario.plano]['nome']} vale até {ate.astimezone(timezone(timedelta(hours=-3))):%d/%m/%Y}"))
+    banco.commit()
+
+
+def estornar_creditos(banco: Session, pedido: Pedido):
+    """Pagamento devolvido ou contestado depois de aprovado: tira os créditos que ainda sobram."""
+    if pedido.status != "aprovado":
+        return
+    tirar = min(pedido.usuario.creditos, pedido.quantidade)
+    pedido.usuario.creditos -= tirar
+    pedido.status = "estornado"
+    banco.add(MovimentoCredito(usuario=pedido.usuario, quantidade=-tirar,
+                               descricao=f"Estorno do pacote de {pedido.quantidade} créditos"))
+    banco.commit()
+    log.warning("Pedido %s estornado: -%s créditos do usuário %s", pedido.referencia, tirar, pedido.usuario_id)
+
+
+def _aplicar_pagamento(banco: Session, pedido: Pedido, pg: dict):
+    status = pg.get("status")
+    if status == "approved" and float(pg.get("transaction_amount", 0)) >= pedido.valor - 0.01:
+        liberar_creditos(banco, pedido, str(pg.get("id")))
+    elif status in ("refunded", "charged_back"):
+        estornar_creditos(banco, pedido)
+    elif status in ("rejected", "cancelled") and pedido.status == "pendente":
+        pedido.status = "recusado"
+        banco.commit()
+
+
+def conferir_pedido(banco: Session, pedido: Pedido):
+    """Pergunta ao Mercado Pago como está um pedido pendente."""
+    if pedido.tipo == "creditos":
+        pagamentos = mp.pagamentos_da_referencia(pedido.referencia)
+        aprovado = next((p for p in pagamentos if p.get("status") == "approved"), None)
+        for pg in ([aprovado] if aprovado else pagamentos[:1]):
+            _aplicar_pagamento(banco, pedido, pg)
+    elif pedido.mp_id:
+        if mp.buscar_assinatura(pedido.mp_id).get("status") == "authorized":
+            ativar_plano(banco, pedido, pedido.mp_id)
+
+
+def rotina_de_pagamentos():
+    """Roda de hora em hora: encerra planos cancelados que venceram e confere pedidos sem resposta
+    (caso algum aviso do Mercado Pago tenha se perdido)."""
+    agora = _agora()
+    with SessaoBanco() as banco:
+        for u in banco.scalars(select(Usuario).where(Usuario.plano_ate.is_not(None))):
+            if _utc(u.plano_ate) <= agora:
+                voltar_ao_gratis(banco, u)
+        if PAGAMENTO_SIMULADO:
+            return
+        pendentes = banco.scalars(select(Pedido).where(Pedido.status == "pendente")).all()
+        for pedido in pendentes:
+            idade = agora - _utc(pedido.criado_em)
+            if idade < timedelta(minutes=10):
+                continue
+            try:
+                conferir_pedido(banco, pedido)
+            except mp.ErroPagamento as erro:
+                log.warning("Não consegui conferir o pedido %s: %s", pedido.referencia, erro)
+                continue
+            if pedido.status == "pendente" and idade > timedelta(days=3):
+                pedido.status = "expirado"   # Pix e boleto não pagos vencem
+                banco.commit()
 
 
 # ---------- Rotas ----------
@@ -105,7 +218,7 @@ def comprar_creditos(dados: CompraCreditos, usuario: Usuario = Depends(usuario_l
 def assinar(dados: Assinar, usuario: Usuario = Depends(usuario_logado), banco: Session = Depends(obter_banco)):
     if dados.plano not in PRECOS_PLANOS:
         raise HTTPException(400, "Plano inválido.")
-    if usuario.plano == dados.plano:
+    if usuario.plano == dados.plano and not usuario.plano_ate:
         raise HTTPException(400, "Você já está nesse plano.")
     valor = PRECOS_PLANOS[dados.plano]
     pedido = _novo_pedido(banco, usuario, tipo="assinatura", plano=dados.plano, valor=valor)
@@ -113,9 +226,7 @@ def assinar(dados: Assinar, usuario: Usuario = Depends(usuario_logado), banco: S
         ativar_plano(banco, pedido, "simulado")
         return {"simulado": True, "usuario": dados_usuario(usuario)}
     try:
-        # Trocando de plano: cancela a assinatura antiga antes de criar a nova
-        if usuario.assinatura_mp_id and usuario.assinatura_mp_id != "simulado":
-            mp.cancelar_assinatura(usuario.assinatura_mp_id)
+        # Trocando de plano: a assinatura antiga só é cancelada quando a nova for paga (ver ativar_plano)
         assinatura_id, link = mp.criar_assinatura(pedido.referencia, f"Clip Storage: plano {PLANOS[dados.plano]['nome']}",
                                                   valor, usuario.email)
     except mp.ErroPagamento as erro:
@@ -130,12 +241,23 @@ def assinar(dados: Assinar, usuario: Usuario = Depends(usuario_logado), banco: S
 def cancelar(usuario: Usuario = Depends(usuario_logado), banco: Session = Depends(obter_banco)):
     if usuario.plano == "explorador":
         raise HTTPException(400, "Você já está no plano grátis.")
-    if usuario.assinatura_mp_id and usuario.assinatura_mp_id != "simulado" and not PAGAMENTO_SIMULADO:
-        try:
-            mp.cancelar_assinatura(usuario.assinatura_mp_id)
-        except mp.ErroPagamento as erro:
-            raise HTTPException(502, str(erro))
-    voltar_ao_gratis(banco, usuario)
+    if usuario.plano_ate:
+        raise HTTPException(400, "A assinatura já está cancelada.")
+    if PAGAMENTO_SIMULADO or usuario.assinatura_mp_id in (None, "simulado"):
+        voltar_ao_gratis(banco, usuario)
+        return dados_usuario(usuario)
+    try:
+        ate = fim_do_periodo_pago(banco, usuario)   # pega a data antes de cancelar no Mercado Pago
+        mp.cancelar_assinatura(usuario.assinatura_mp_id)
+    except mp.ErroPagamento as erro:
+        raise HTTPException(502, str(erro))
+    if ate <= _agora() + timedelta(minutes=1):
+        voltar_ao_gratis(banco, usuario)
+    else:
+        usuario.plano_ate, usuario.assinatura_mp_id = ate, None
+        banco.add(MovimentoCredito(usuario=usuario, quantidade=0,
+                                   descricao=f"Assinatura cancelada: plano {PLANOS[usuario.plano]['nome']} vale até {ate.astimezone(timezone(timedelta(hours=-3))):%d/%m/%Y}"))
+        banco.commit()
     return dados_usuario(usuario)
 
 
@@ -147,18 +269,7 @@ def verificar(referencia: str, usuario: Usuario = Depends(usuario_logado), banco
         raise HTTPException(404, "Pedido não encontrado.")
     if pedido.status == "pendente" and not PAGAMENTO_SIMULADO:
         try:
-            if pedido.tipo == "creditos":
-                for pg in mp.pagamentos_da_referencia(referencia):
-                    if pg.get("status") == "approved" and float(pg.get("transaction_amount", 0)) >= pedido.valor - 0.01:
-                        liberar_creditos(banco, pedido, str(pg["id"]))
-                        break
-                    if pg.get("status") in ("rejected", "cancelled"):
-                        pedido.status = "recusado"
-                        banco.commit()
-            elif pedido.mp_id:
-                assinatura = mp.buscar_assinatura(pedido.mp_id)
-                if assinatura.get("status") == "authorized":
-                    ativar_plano(banco, pedido, pedido.mp_id)
+            conferir_pedido(banco, pedido)
         except mp.ErroPagamento as erro:
             log.warning("Não consegui verificar o pedido %s: %s", referencia, erro)
     return {"status": pedido.status, "tipo": pedido.tipo, "usuario": dados_usuario(usuario)}
@@ -185,11 +296,7 @@ async def webhook(request: Request, x_signature: str | None = Header(default=Non
             pg = mp.buscar_pagamento(id_dado)
             pedido = banco.scalar(select(Pedido).where(Pedido.referencia == pg.get("external_reference")))
             if pedido and pedido.tipo == "creditos":
-                if pg.get("status") == "approved" and float(pg.get("transaction_amount", 0)) >= pedido.valor - 0.01:
-                    liberar_creditos(banco, pedido, id_dado)
-                elif pg.get("status") in ("rejected", "cancelled", "refunded", "charged_back") and pedido.status == "pendente":
-                    pedido.status = "recusado"
-                    banco.commit()
+                _aplicar_pagamento(banco, pedido, pg)
 
         elif tipo == "subscription_preapproval":
             assinatura = mp.buscar_assinatura(id_dado)
@@ -198,7 +305,8 @@ async def webhook(request: Request, x_signature: str | None = Header(default=Non
                 if assinatura.get("status") == "authorized":
                     ativar_plano(banco, pedido, id_dado)
                 elif assinatura.get("status") in ("cancelled", "paused") and pedido.usuario.assinatura_mp_id == id_dado:
-                    voltar_ao_gratis(banco, pedido.usuario)
+                    # Cancelada no app do Mercado Pago ou por falta de pagamento: vale até o fim do mês pago
+                    encerrar_no_fim_do_periodo(banco, pedido.usuario)
 
         elif tipo == "subscription_authorized_payment":
             # Cobrança mensal da assinatura: renova os créditos do ciclo

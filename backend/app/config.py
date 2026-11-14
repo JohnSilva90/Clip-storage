@@ -23,7 +23,7 @@ DIAS_GUARDAR = int(os.getenv("DIAS_GUARDAR", "30"))   # projetos mais antigos s�
 FOLGA_FONTE = 30   # segundos guardados antes e depois de cada corte, para ajustar no editor
 
 # ---------- Pagamentos (Mercado Pago) ----------
-MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "").strip()        # comece com o token de TESTE
+MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "").strip()        # comece com as credenciais de TESTE
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "").strip()    # "assinatura secreta" dos webhooks
 URL_PUBLICA = os.getenv("URL_PUBLICA", "http://localhost:8000").rstrip("/")
 # Sem token do Mercado Pago, trocar de plano e comprar créditos funciona em modo simulação (só para testes)

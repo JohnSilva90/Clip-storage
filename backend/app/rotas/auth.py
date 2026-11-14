@@ -31,7 +31,8 @@ def dados_usuario(u: Usuario) -> dict:
     plano = PLANOS[u.plano]
     return {"id": u.id, "nome": u.nome, "email": u.email, "plano": u.plano, "plano_nome": plano["nome"],
             "creditos": u.creditos, "creditos_plano": plano["creditos"], "max_min": plano["max_min"],
-            "marca_dagua": plano["marca_dagua"], "assinante": bool(u.assinatura_mp_id)}
+            "marca_dagua": plano["marca_dagua"], "assinante": bool(u.assinatura_mp_id),
+            "plano_ate": u.plano_ate.isoformat() if u.plano_ate else None}
 
 
 def abrir_sessao(resposta: Response, usuario: Usuario, lembrar: bool = True):

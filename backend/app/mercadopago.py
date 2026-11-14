@@ -95,10 +95,23 @@ def cancelar_assinatura(assinatura_id: str) -> dict:
     return _req("PUT", f"/preapproval/{assinatura_id}", {"status": "cancelled"})
 
 
+def conta() -> dict:
+    """Dados da conta dona do token (usado pelo verificar_mercadopago.py)."""
+    return _req("GET", "/users/me")
+
+
+def url_aviso() -> str | None:
+    return _url_aviso()
+
+
 def assinatura_valida(cabecalho_assinatura: str | None, id_requisicao: str | None, id_dado: str | None) -> bool:
     """Confere se o aviso (webhook) veio mesmo do Mercado Pago, pela assinatura HMAC."""
     if not MP_WEBHOOK_SECRET:
-        return True   # sem segredo configurado, aceita (só em testes!)
+        # Sem segredo só é aceito rodando no PC (http). No site de verdade (https) o segredo é obrigatório.
+        if URL_PUBLICA.startswith("https://"):
+            log.error("MP_WEBHOOK_SECRET não configurado: aviso recusado por segurança.")
+            return False
+        return True
     if not cabecalho_assinatura:
         return False
     partes = dict(p.split("=", 1) for p in cabecalho_assinatura.split(",") if "=" in p)

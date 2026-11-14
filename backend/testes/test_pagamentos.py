@@ -97,10 +97,11 @@ def test_assinatura_ciclo_completo(cliente):
     cliente.post("/api/pagamentos/webhook", json={"type": "subscription_authorized_payment", "data": {"id": "c1"}}, headers=assinar_webhook("c1"))
     assert cliente.get("/api/auth/eu").json()["creditos"] == 100
 
-    # cancelou no Mercado Pago: volta ao grátis
+    # cancelou no Mercado Pago: o plano vale até o fim do mês pago e depois volta ao grátis
     FALSO["assinaturas"][sub]["status"] = "cancelled"
     cliente.post("/api/pagamentos/webhook", json={"type": "subscription_preapproval", "data": {"id": sub}}, headers=assinar_webhook(sub))
-    assert cliente.get("/api/auth/eu").json()["plano"] == "explorador"
+    eu = cliente.get("/api/auth/eu").json()
+    assert eu["plano"] == "criador" and eu["plano_ate"] and not eu["assinante"]
 
 
 def test_pacote_invalido(cliente):

@@ -156,6 +156,11 @@ def _laco():
                 limpar_antigos()
             except Exception:
                 log.exception("Falha na limpeza de projetos antigos")
+            try:
+                from ..rotas.pagamentos import rotina_de_pagamentos
+                rotina_de_pagamentos()
+            except Exception:
+                log.exception("Falha na rotina de pagamentos")
         with SessaoBanco() as banco:
             proximo = banco.scalar(select(Projeto.id).where(Projeto.status == "fila").order_by(Projeto.criado_em))
         if proximo:
