@@ -83,6 +83,9 @@ def buscar_order(order_id: str) -> dict:
 
 def criar_assinatura(referencia: str, titulo: str, valor: float, email: str) -> tuple[str, str]:
     """Assinatura mensal no cartão. Devolve (id da assinatura, link para o cliente autorizar)."""
+    if _local():
+        # O Mercado Pago exige um endereço https de volta; localhost é recusado
+        raise ErroPagamento("Assinaturas só funcionam com o site no ar (https). No PC, teste os pacotes de créditos.")
     corpo = {
         "reason": titulo,
         "external_reference": referencia,
