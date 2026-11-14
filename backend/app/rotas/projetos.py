@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..contas import ilimitado, plano_de, saldo
 from ..config import PASTA_CORTES, PASTA_UPLOADS, PLANOS
 from ..database import obter_banco
 from ..models import MovimentoCredito, Projeto, Usuario
@@ -78,11 +79,11 @@ def criar(arquivo: UploadFile = File(...), inicio_min: float = Form(0), fim_min:
         destino.unlink(missing_ok=True)
         raise HTTPException(400, "Escolha um trecho de pelo menos 10 segundos.")
 
-    plano = PLANOS[usuario.plano]
+    plano = plano_de(usuario)
     if (fim - inicio) / 60 > plano["max_min"] + 0.01:
         destino.unlink(missing_ok=True)
         raise HTTPException(403, f"Seu plano analisa até {plano['max_min']} minutos por vídeo.")
-    custo = creditos_para(fim - inicio)
+    custo = 0 if ilimitado(usuario) else creditos_para(fim - inicio)
     if custo > usuario.creditos:
         destino.unlink(missing_ok=True)
         raise HTTPException(402, f"Créditos insuficientes: precisa de {custo}, você tem {usuario.creditos}.")
@@ -95,7 +96,7 @@ def criar(arquivo: UploadFile = File(...), inicio_min: float = Form(0), fim_min:
     banco.add(MovimentoCredito(usuario=usuario, quantidade=-custo, descricao=f"Análise: {titulo}"))
     banco.add(projeto)
     banco.commit()
-    return resumo(projeto) | {"saldo": usuario.creditos}
+    return resumo(projeto) | {"saldo": saldo(usuario)}
 
 
 class PedidoLink(BaseModel):
@@ -128,10 +129,10 @@ def criar_por_link(dados: PedidoLink, usuario: Usuario = Depends(usuario_logado)
     fim = min(total, dados.fim_min * 60) if dados.fim_min > 0 else total
     if fim - inicio < 10:
         raise HTTPException(400, "Escolha um trecho de pelo menos 10 segundos.")
-    plano = PLANOS[usuario.plano]
+    plano = plano_de(usuario)
     if (fim - inicio) / 60 > plano["max_min"] + 0.01:
         raise HTTPException(403, f"Seu plano analisa até {plano['max_min']} minutos por vídeo.")
-    custo = creditos_para(fim - inicio)
+    custo = 0 if ilimitado(usuario) else creditos_para(fim - inicio)
     if custo > usuario.creditos:
         raise HTTPException(402, f"Créditos insuficientes: precisa de {custo}, você tem {usuario.creditos}.")
     formato = dados.formato if dados.formato in ("9:16", "1:1", "16:9") else "9:16"
@@ -143,7 +144,7 @@ def criar_por_link(dados: PedidoLink, usuario: Usuario = Depends(usuario_logado)
     banco.add(MovimentoCredito(usuario=usuario, quantidade=-custo, descricao=f"Análise: {info['titulo'][:150]}"))
     banco.add(projeto)
     banco.commit()
-    return resumo(projeto) | {"saldo": usuario.creditos}
+    return resumo(projeto) | {"saldo": saldo(usuario)}
 
 
 @rotas.get("/{projeto_id}")

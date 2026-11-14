@@ -23,6 +23,9 @@ DIAS_GUARDAR = int(os.getenv("DIAS_GUARDAR", "30"))   # projetos mais antigos s�
 FOLGA_FONTE = 30   # segundos guardados antes e depois de cada corte, para ajustar no editor
 
 # ---------- Pagamentos (Mercado Pago) ----------
+# Contas do dono (créditos ilimitados): e-mails separados por vírgula, só no .env
+CONTAS_ILIMITADAS = {e.strip().lower() for e in os.getenv("CONTAS_ILIMITADAS", "").split(",") if e.strip()}
+
 MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "").strip()        # comece com as credenciais de TESTE
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET", "").strip()    # "assinatura secreta" dos webhooks
 URL_PUBLICA = os.getenv("URL_PUBLICA", "http://localhost:8000").rstrip("/")

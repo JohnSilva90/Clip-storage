@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from ..contas import plano_de
 from ..config import PASTA_CORTES, PASTA_UPLOADS, PLANOS
 from ..database import obter_banco
 from ..models import Corte, Usuario
@@ -127,7 +128,7 @@ def exportar(corte_id: int, usuario: Usuario = Depends(usuario_logado), banco: S
     pasta = PASTA_CORTES / str(projeto.id)
     estilo = corte.estilo or {}
     lista = legendas.palavras_do_corte(projeto.transcricao, corte.inicio, corte.fim, estilo.get("texto"))
-    marca = PLANOS[usuario.plano]["marca_dagua"]
+    marca = plano_de(usuario)["marca_dagua"]
     ass = None
     if lista or marca:
         ass = legendas.gerar_ass(lista, estilo, pasta / f"corte_{corte.id}.ass", marca, corte.fim - corte.inicio)

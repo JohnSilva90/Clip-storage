@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ..contas import ilimitado, plano_de, saldo
 from ..config import DIAS_SESSAO, PLANOS
 from ..database import obter_banco
 from ..models import MovimentoCredito, Usuario
@@ -28,9 +29,9 @@ class Login(BaseModel):
 
 
 def dados_usuario(u: Usuario) -> dict:
-    plano = PLANOS[u.plano]
+    plano = plano_de(u)
     return {"id": u.id, "nome": u.nome, "email": u.email, "plano": u.plano, "plano_nome": plano["nome"],
-            "creditos": u.creditos, "creditos_plano": plano["creditos"], "max_min": plano["max_min"],
+            "creditos": saldo(u), "ilimitado": ilimitado(u), "creditos_plano": plano["creditos"], "max_min": plano["max_min"],
             "marca_dagua": plano["marca_dagua"], "assinante": bool(u.assinatura_mp_id),
             "plano_ate": u.plano_ate.isoformat() if u.plano_ate else None}
 

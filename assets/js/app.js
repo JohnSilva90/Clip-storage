@@ -98,7 +98,7 @@
   }
 
   function atualizarCreditos() {
-    $$('[data-creditos]').forEach((el) => { el.textContent = sessao.creditos; });
+    $$('[data-creditos]').forEach((el) => { el.textContent = sessao.ilimitado ? '∞' : sessao.creditos; });
     const pct = Math.min(100, (sessao.creditos / plano().creditos) * 100);
     $$('[data-barra-creditos]').forEach((el) => { el.style.width = pct + '%'; });
   }
@@ -157,7 +157,7 @@
   if (pagina === 'painel') {
     const primeiro = sessao.nome.split(' ')[0];
     $('#saudacao').textContent = `Olá, ${primeiro}!`;
-    $('#estCreditos').textContent = sessao.creditos;
+    $('#estCreditos').textContent = sessao.ilimitado ? '∞' : sessao.creditos;
     $('#estPlano').textContent = 'Plano ' + plano().nome;
 
     const lista = $('#listaProjetos');

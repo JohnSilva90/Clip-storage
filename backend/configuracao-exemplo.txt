@@ -12,6 +12,10 @@ WHISPER_MODELO=small
 # "cuda" se tiver placa NVIDIA configurada, ou "cpu"
 WHISPER_DISPOSITIVO=cpu
 
+# Contas do dono da plataforma: créditos ilimitados, sem marca d'água e sem limite de duração.
+# E-mails separados por vírgula (o mesmo e-mail usado no cadastro do Clip Storage).
+CONTAS_ILIMITADAS=
+
 # ---------- Pagamentos (Mercado Pago) ----------
 # Pegue em https://www.mercadopago.com.br/developers/panel/app  (Suas integrações > Credenciais)
 # Comece SEMPRE com o Access Token de TESTE. Sem token, os pagamentos ficam em modo simulação.

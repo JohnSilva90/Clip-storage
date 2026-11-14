@@ -12,6 +12,7 @@ from sqlalchemy import select
 from datetime import datetime, timedelta, timezone
 import shutil
 
+from ..contas import plano_de
 from ..config import DIAS_GUARDAR, FOLGA_FONTE, PASTA_CORTES, PASTA_UPLOADS, PLANOS
 from ..database import SessaoBanco
 from ..models import Corte, MovimentoCredito, Projeto
@@ -35,7 +36,7 @@ def processar(projeto_id: int):
         pasta = PASTA_CORTES / str(projeto.id)
         pasta.mkdir(parents=True, exist_ok=True)
         opcoes = projeto.opcoes or {}
-        plano = PLANOS[projeto.usuario.plano]
+        plano = plano_de(projeto.usuario)
 
         # Veio de um link? Baixa só o trecho escolhido.
         if opcoes.get("url") and not projeto.arquivo:

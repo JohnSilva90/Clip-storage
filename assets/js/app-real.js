@@ -24,7 +24,7 @@ window.AppReal = (function () {
   // =========================================================
   async function painel() {
     $('#saudacao').textContent = `Olá, ${sessao.nome.split(' ')[0]}!`;
-    $('#estCreditos').textContent = sessao.creditos;
+    $('#estCreditos').textContent = sessao.ilimitado ? '∞' : sessao.creditos;
     $('#estPlano').textContent = 'Plano ' + sessao.plano_nome;
     $('#estViews').textContent = '—'; $('#estViewsInfo').textContent = 'Conecte as redes (em breve)';
     $('#estViewsInfo').className = 'neutro';
@@ -90,10 +90,10 @@ window.AppReal = (function () {
     };
     function resumo() {
       const min = (arquivo || link) ? trecho() : 0;
-      const custo = Math.ceil(min);
+      const custo = sessao.ilimitado ? 0 : Math.ceil(min);
       $('#resumoDur').textContent = min ? mmss(min * 60) : '—';
       $('#resumoCred').textContent = custo;
-      $('#resumoSaldo').textContent = sessao.creditos - custo;
+      $('#resumoSaldo').textContent = sessao.ilimitado ? '∞' : sessao.creditos - custo;
       aviso.classList.remove('aviso-erro');
       btnGerar.disabled = !min;
       if (!min) { aviso.textContent = 'Escolha um vídeo para ver o custo.'; return; }
@@ -459,8 +459,8 @@ window.AppReal = (function () {
     function preencher() {
       $('#nomePlanoAtual').textContent = sessao.plano_nome;
       $('#precoPlanoAtual').textContent = { explorador: 'Grátis', criador: 'R$ 29,90/mês', estudio: 'R$ 59,90/mês' }[sessao.plano];
-      $('#credAtual').textContent = sessao.creditos;
-      $('#credTotal').textContent = sessao.creditos_plano;
+      $('#credAtual').textContent = sessao.ilimitado ? '∞' : sessao.creditos;
+      $('#credTotal').textContent = sessao.ilimitado ? '∞' : sessao.creditos_plano;
       $('#barraUso').style.width = Math.min(100, (sessao.creditos / sessao.creditos_plano) * 100) + '%';
       const ate = sessao.plano_ate ? new Date(sessao.plano_ate).toLocaleDateString('pt-BR') : null;
       $('#btnCancelar').hidden = sessao.plano === 'explorador' || !!ate;
