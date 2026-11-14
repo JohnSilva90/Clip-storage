@@ -58,7 +58,7 @@ else:
 aviso = mp.url_aviso()
 print("\nNo painel do Mercado Pago (Suas integrações > sua aplicação > Webhooks), cadastre:")
 print(f"  URL de produção:  {aviso or '(precisa de um endereço público https)'}")
-print("  Eventos:          Pagamentos  +  Planos e assinaturas")
+print("  Eventos:          Order (Mercado Pago)  +  Pagamentos  +  Planos e assinaturas")
 print("\nPreços que o site vai cobrar:")
 def reais(v):
     return f"R$ {v:.2f}".replace(".", ",")

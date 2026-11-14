@@ -1,4 +1,4 @@
-"""Conversa com a API do Mercado Pago (Checkout Pro para Pix/cartão e Assinaturas)."""
+"""Conversa com a API do Mercado Pago: Checkout Pro pela API de Orders (pacotes) e Assinaturas (planos)."""
 import hashlib
 import hmac
 import json
@@ -42,21 +42,43 @@ def _url_aviso() -> str | None:
     return None if "localhost" in URL_PUBLICA or "127.0.0.1" in URL_PUBLICA else f"{URL_PUBLICA}/api/pagamentos/webhook"
 
 
-def criar_checkout(referencia: str, titulo: str, valor: float, email: str) -> str:
-    """Pagamento único (pacote de créditos). Devolve o link do checkout (Pix, cartão, boleto)."""
+def _local() -> bool:
+    return "localhost" in URL_PUBLICA or "127.0.0.1" in URL_PUBLICA
+
+
+def criar_checkout(referencia: str, titulo: str, valor: float, email: str) -> tuple[str, str]:
+    """Pagamento único (pacote de créditos) pela API de Orders do Checkout Pro.
+    Devolve (id da order, link do checkout com Pix, cartão e boleto)."""
+    total = f"{valor:.2f}"
+    volta = f"{URL_PUBLICA}/assinatura.html?pedido={referencia}"
     corpo = {
-        "items": [{"title": titulo, "quantity": 1, "unit_price": round(valor, 2), "currency_id": "BRL"}],
-        "payer": {"email": email},
+        "type": "online",
+        "processing_mode": "manual",
+        "total_amount": total,
         "external_reference": referencia,
-        "back_urls": {s: f"{URL_PUBLICA}/assinatura.html?pedido={referencia}" for s in ("success", "failure", "pending")},
-        "statement_descriptor": "CLIPSTORAGE",
+        "description": titulo,
+        "payer": {"email": email},
+        "items": [{"title": titulo, "unit_price": total, "quantity": 1}],
+        "config": {
+            "statement_descriptor": "CLIPSTORAGE",
+            "online": {"success_url": volta, "failure_url": volta, "pending_url": volta},
+        },
     }
-    if "localhost" not in URL_PUBLICA:
-        corpo["auto_return"] = "approved"
-    if _url_aviso():
-        corpo["notification_url"] = _url_aviso()
-    dados = _req("POST", "/checkout/preferences", corpo, chave_unica=referencia)
-    return dados.get("init_point") or dados["sandbox_init_point"]
+    if not _local():
+        corpo["config"]["online"]["auto_return"] = "approved"
+    try:
+        dados = _req("POST", "/v1/orders", corpo, chave_unica=referencia)
+    except ErroPagamento:
+        if not _local():
+            raise
+        # No PC o Mercado Pago pode recusar endereços "localhost": tenta sem a volta automática
+        corpo["config"].pop("online")
+        dados = _req("POST", "/v1/orders", corpo, chave_unica=referencia + "-b")
+    return str(dados["id"]), dados["checkout_url"]
+
+
+def buscar_order(order_id: str) -> dict:
+    return _req("GET", f"/v1/orders/{order_id}")
 
 
 def criar_assinatura(referencia: str, titulo: str, valor: float, email: str) -> tuple[str, str]:

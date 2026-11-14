@@ -1,7 +1,7 @@
 # Ligando os pagamentos do Mercado Pago
 
-Este guia é para **depois que o site estiver no ar na VPS, com https**. No seu PC os pagamentos
-ficam em modo simulação (nada é cobrado), e é assim que deve ficar.
+Este guia vale principalmente para **depois que o site estiver no ar na VPS, com https** (a compra de pacotes também dá para testar no PC; veja o passo 2). Sem token, os pagamentos
+ficam em modo simulação (nada é cobrado).
 
 A ordem é sempre: **1) testar com dinheiro de mentira → 2) ligar a cobrança de verdade.**
 
@@ -22,11 +22,15 @@ A ordem é sempre: **1) testar com dinheiro de mentira → 2) ligar a cobrança 
 
 1. Entre em <https://www.mercadopago.com.br/developers> com a sua conta e clique em **Suas integrações**.
 2. **Criar aplicação**. Nome: `Clip Storage`.
-3. Tipo de solução: **Pagamentos online** e escolha **Checkout Pro**. Se perguntar sobre
-   assinaturas/pagamentos recorrentes, marque também.
+3. Solução: **Checkout Pro**. Em "Outros dados", tipo de API: **API de Orders**
+   (a API de Preferences está sendo descontinuada; o Clip Storage usa Orders para os pacotes).
 4. Aceite os termos e crie.
 
 ## Passo 2: testar com dinheiro de mentira
+
+> Dá para testar a **compra de pacotes no seu PC**, antes da VPS: preencha só o `MP_ACCESS_TOKEN`
+> de teste (passo 2.1), pule o 2.2 e vá para o 2.4. Ao voltar do pagamento, o site pergunta ao
+> Mercado Pago se foi pago. As **assinaturas** só dá para testar com o site no ar (https).
 
 ### 2.1 Credenciais de teste
 Na aplicação: **Testes > Credenciais de teste**. Copie o **Access Token** (começa com `APP_USR-`).
@@ -34,7 +38,8 @@ Na aplicação: **Testes > Credenciais de teste**. Copie o **Access Token** (com
 ### 2.2 Avisos (webhooks)
 Na aplicação: **Webhooks > Configurar notificações**.
 - **URL** (modo de teste): `https://SEU-SITE/api/pagamentos/webhook`
-- **Eventos:** marque **Pagamentos** e **Planos e assinaturas**.
+- **Eventos:** marque **Order (Mercado Pago)** (pacotes de créditos), **Pagamentos** e
+  **Planos e assinaturas** (planos mensais).
 - Salve. Vai aparecer uma **assinatura secreta**: copie.
 
 ### 2.3 Colocar no servidor

@@ -90,7 +90,7 @@ def test_estorno_tira_os_creditos(cliente):
 
 def test_aviso_perdido_e_conferido_pela_rotina(cliente):
     ref = cliente.post("/api/pagamentos/creditos", json={"quantidade": 30}).json()["pedido"]
-    FALSO["pagamentos"]["p1"] = {"id": "p1", "status": "approved", "transaction_amount": 9.90, "external_reference": ref}
+    FALSO["orders"][f"ORD{ref}"] = {"id": f"ORD{ref}", "status": "processed", "total_paid_amount": "9.90", "external_reference": ref}
     with SessaoBanco() as b:                                 # pedido de 15 min atrás, sem webhook
         from sqlalchemy import select
         p = b.scalar(select(Pedido).where(Pedido.referencia == ref))

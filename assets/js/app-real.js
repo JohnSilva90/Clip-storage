@@ -489,19 +489,21 @@ window.AppReal = (function () {
     if (cfg.simulado) avisar('Pagamentos em modo simulação (configure o Mercado Pago no .env).');
 
     // Voltou do checkout do Mercado Pago? Confere o pagamento.
-    const pedido = new URLSearchParams(location.search).get('pedido');
+    const guardado = (() => { try { return localStorage.getItem('cs_ultimo_pedido'); } catch (e) { return null; } })();
+    const pedido = new URLSearchParams(location.search).get('pedido') || guardado;
+    const esquecer = () => { try { localStorage.removeItem('cs_ultimo_pedido'); } catch (e) { /* sem armazenamento */ } };
     if (pedido) {
       history.replaceState(null, '', 'assinatura.html');
       let tentativas = 0;
       (async function conferir() {
         try {
           const r = await API.get('/api/pagamentos/pedido/' + pedido);
-          if (r.status === 'aprovado') { atualizarSessao(r.usuario); avisar('Pagamento confirmado! 🎉'); return; }
-          if (r.status === 'recusado') { avisar('O pagamento não foi aprovado. Tente outra forma de pagamento.'); return; }
-          if (r.status === 'expirado') { avisar('Esse pagamento venceu. Faça um novo pedido.'); return; }
+          if (r.status === 'aprovado') { esquecer(); atualizarSessao(r.usuario); avisar('Pagamento confirmado! 🎉'); return; }
+          if (r.status === 'recusado') { esquecer(); avisar('O pagamento não foi aprovado. Tente outra forma de pagamento.'); return; }
+          if (r.status === 'expirado' || r.status === 'estornado') { esquecer(); if (!guardado) avisar('Esse pagamento venceu. Faça um novo pedido.'); return; }
           if (++tentativas < 20) { if (tentativas === 1) avisar('Aguardando a confirmação do pagamento...'); setTimeout(conferir, 3000); }
           else avisar('Ainda não recebemos a confirmação. Se pagou com Pix, ela chega em alguns minutos.');
-        } catch (e) { avisar(e.message); }
+        } catch (e) { esquecer(); if (!guardado || pedido !== guardado) avisar(e.message); }
       })();
     }
 
@@ -510,7 +512,10 @@ window.AppReal = (function () {
       const texto = btn.textContent; btn.textContent = 'Abrindo o pagamento...';
       try {
         const r = await API.post(url, corpo);
-        if (r.checkout) { location.href = r.checkout; return; }
+        if (r.checkout) {
+          try { localStorage.setItem('cs_ultimo_pedido', r.pedido); } catch (e) { /* sem armazenamento */ }
+          location.href = r.checkout; return;
+        }
         atualizarSessao(r.usuario);
         avisar('Feito! (modo simulação: nenhum valor foi cobrado)');
       } catch (e) { avisar(e.message); }

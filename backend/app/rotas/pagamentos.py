@@ -40,8 +40,8 @@ def _novo_pedido(banco, usuario, **campos) -> Pedido:
 
 # ---------- Liberação (usada pelo webhook, pela verificação e pela simulação) ----------
 def liberar_creditos(banco: Session, pedido: Pedido, mp_id: str | None = None):
-    if pedido.status == "aprovado":
-        return   # já liberado: nunca dá crédito duas vezes
+    if pedido.status in ("aprovado", "estornado"):
+        return   # já liberado (ou devolvido): nunca dá crédito duas vezes
     pedido.status, pedido.mp_id, pedido.aprovado_em = "aprovado", mp_id or pedido.mp_id, datetime.now(timezone.utc)
     pedido.usuario.creditos += pedido.quantidade
     banco.add(MovimentoCredito(usuario=pedido.usuario, quantidade=pedido.quantidade,
@@ -153,9 +153,27 @@ def _aplicar_pagamento(banco: Session, pedido: Pedido, pg: dict):
         banco.commit()
 
 
+def _aplicar_order(banco: Session, pedido: Pedido, order: dict):
+    """Status da order (API de Orders): processed = pago."""
+    status = order.get("status")
+    pago = float(order.get("total_paid_amount") or 0)
+    if status == "processed" and pago >= pedido.valor - 0.01:
+        liberar_creditos(banco, pedido, str(order.get("id")))
+    elif status in ("refunded", "charged_back"):
+        estornar_creditos(banco, pedido)
+    elif status in ("canceled", "cancelled", "failed") and pedido.status == "pendente":
+        pedido.status = "recusado"
+        banco.commit()
+    elif status == "expired" and pedido.status == "pendente":
+        pedido.status = "expirado"
+        banco.commit()
+
+
 def conferir_pedido(banco: Session, pedido: Pedido):
     """Pergunta ao Mercado Pago como está um pedido pendente."""
-    if pedido.tipo == "creditos":
+    if pedido.tipo == "creditos" and (pedido.mp_id or "").upper().startswith("ORD"):
+        _aplicar_order(banco, pedido, mp.buscar_order(pedido.mp_id))
+    elif pedido.tipo == "creditos":
         pagamentos = mp.pagamentos_da_referencia(pedido.referencia)
         aprovado = next((p for p in pagamentos if p.get("status") == "approved"), None)
         for pg in ([aprovado] if aprovado else pagamentos[:1]):
@@ -206,10 +224,11 @@ def comprar_creditos(dados: CompraCreditos, usuario: Usuario = Depends(usuario_l
         liberar_creditos(banco, pedido, "simulado")
         return {"simulado": True, "usuario": dados_usuario(usuario)}
     try:
-        link = mp.criar_checkout(pedido.referencia, f"Clip Storage: {dados.quantidade} créditos", valor, usuario.email)
+        order_id, link = mp.criar_checkout(pedido.referencia, f"Clip Storage: {dados.quantidade} créditos", valor, usuario.email)
     except mp.ErroPagamento as erro:
         banco.rollback()
         raise HTTPException(502, str(erro))
+    pedido.mp_id = order_id
     banco.commit()
     return {"checkout": link, "pedido": pedido.referencia}
 
@@ -292,7 +311,13 @@ async def webhook(request: Request, x_signature: str | None = Header(default=Non
 
     banco = SessaoBanco()
     try:
-        if tipo == "payment":
+        if tipo == "order":
+            order = mp.buscar_order(id_dado)
+            pedido = banco.scalar(select(Pedido).where(Pedido.referencia == order.get("external_reference")))
+            if pedido and pedido.tipo == "creditos":
+                _aplicar_order(banco, pedido, order)
+
+        elif tipo == "payment":
             pg = mp.buscar_pagamento(id_dado)
             pedido = banco.scalar(select(Pedido).where(Pedido.referencia == pg.get("external_reference")))
             if pedido and pedido.tipo == "creditos":

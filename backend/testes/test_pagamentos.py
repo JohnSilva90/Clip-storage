@@ -14,12 +14,13 @@ from fastapi.testclient import TestClient  # noqa: E402
 from app import mercadopago as mp  # noqa: E402
 from app.main import app  # noqa: E402
 
-FALSO = {"pagamentos": {}, "assinaturas": {}, "cobrancas": {}}
+FALSO = {"pagamentos": {}, "assinaturas": {}, "cobrancas": {}, "orders": {}}
 
 
 @pytest.fixture(autouse=True)
 def mp_falso(monkeypatch):
-    monkeypatch.setattr(mp, "criar_checkout", lambda ref, t, v, e: f"https://mp.test/checkout/{ref}")
+    monkeypatch.setattr(mp, "criar_checkout", lambda ref, t, v, e: (f"ORD{ref}", f"https://mp.test/checkout/{ref}"))
+    monkeypatch.setattr(mp, "buscar_order", lambda i: FALSO["orders"].get(i, {"id": i, "status": "created"}))
     monkeypatch.setattr(mp, "criar_assinatura", lambda ref, t, v, e: (f"sub_{ref}", f"https://mp.test/assinar/{ref}"))
     monkeypatch.setattr(mp, "cancelar_assinatura", lambda i: {"status": "cancelled"})
     monkeypatch.setattr(mp, "buscar_pagamento", lambda i: FALSO["pagamentos"][i])
@@ -30,7 +31,7 @@ def mp_falso(monkeypatch):
 
 
 def assinar_webhook(id_dado, req="req-1", ts="1700000000"):
-    v1 = hmac.new(b"segredo-teste", f"id:{id_dado};request-id:{req};ts:{ts};".encode(), hashlib.sha256).hexdigest()
+    v1 = hmac.new(b"segredo-teste", f"id:{str(id_dado).lower()};request-id:{req};ts:{ts};".encode(), hashlib.sha256).hexdigest()
     return {"x-signature": f"ts={ts},v1={v1}", "x-request-id": req}
 
 
@@ -72,7 +73,8 @@ def test_valor_menor_nao_libera(cliente):
 
 def test_verificacao_na_volta_do_checkout(cliente):
     ref = cliente.post("/api/pagamentos/creditos", json={"quantidade": 30}).json()["pedido"]
-    FALSO["pagamentos"]["333"] = {"id": 333, "status": "approved", "transaction_amount": 9.90, "external_reference": ref}
+    assert cliente.get(f"/api/pagamentos/pedido/{ref}").json()["status"] == "pendente"
+    FALSO["orders"][f"ORD{ref}"] = {"id": f"ORD{ref}", "status": "processed", "total_paid_amount": "9.90", "external_reference": ref}
     r = cliente.get(f"/api/pagamentos/pedido/{ref}").json()
     assert r["status"] == "aprovado" and r["usuario"]["creditos"] == 38
 
@@ -106,3 +108,27 @@ def test_assinatura_ciclo_completo(cliente):
 
 def test_pacote_invalido(cliente):
     assert cliente.post("/api/pagamentos/creditos", json={"quantidade": 5000}).status_code == 400
+
+
+def test_order_paga_e_devolvida_pelo_webhook(cliente):
+    ref = cliente.post("/api/pagamentos/creditos", json={"quantidade": 100}).json()["pedido"]
+    oid = f"ORD{ref}"
+    FALSO["orders"][oid] = {"id": oid, "status": "processed", "total_paid_amount": "27.90", "external_reference": ref}
+    h = assinar_webhook(oid)
+    assert cliente.post("/api/pagamentos/webhook", json={"type": "order", "data": {"id": oid}}, headers=h).status_code == 200
+    assert cliente.get("/api/auth/eu").json()["creditos"] == 108
+    FALSO["orders"][oid]["status"] = "refunded"
+    cliente.post("/api/pagamentos/webhook", json={"type": "order", "data": {"id": oid}}, headers=h)
+    assert cliente.get("/api/auth/eu").json()["creditos"] == 8
+    # aviso atrasado de "pago" depois da devolução não devolve os créditos
+    FALSO["orders"][oid]["status"] = "processed"
+    cliente.post("/api/pagamentos/webhook", json={"type": "order", "data": {"id": oid}}, headers=h)
+    assert cliente.get("/api/auth/eu").json()["creditos"] == 8
+
+
+def test_order_com_valor_menor_nao_libera(cliente):
+    ref = cliente.post("/api/pagamentos/creditos", json={"quantidade": 300}).json()["pedido"]
+    oid = f"ORD{ref}"
+    FALSO["orders"][oid] = {"id": oid, "status": "processed", "total_paid_amount": "1.00", "external_reference": ref}
+    cliente.post("/api/pagamentos/webhook", json={"type": "order", "data": {"id": oid}}, headers=assinar_webhook(oid))
+    assert cliente.get("/api/auth/eu").json()["creditos"] == 8
