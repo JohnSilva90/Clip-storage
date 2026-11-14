@@ -19,6 +19,8 @@ WHISPER_MODELO = os.getenv("WHISPER_MODELO", "small")
 WHISPER_DISPOSITIVO = os.getenv("WHISPER_DISPOSITIVO", "cpu")
 URL_BANCO = os.getenv("URL_BANCO", f"sqlite:///{PASTA_DADOS / 'clipstorage.db'}")
 DIAS_SESSAO = 30
+DIAS_GUARDAR = int(os.getenv("DIAS_GUARDAR", "30"))   # projetos mais antigos são apagados (economiza disco)
+FOLGA_FONTE = 30   # segundos guardados antes e depois de cada corte, para ajustar no editor
 
 # ---------- Pagamentos (Mercado Pago) ----------
 MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN", "").strip()        # comece com o token de TESTE

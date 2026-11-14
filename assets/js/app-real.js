@@ -338,8 +338,8 @@ window.AppReal = (function () {
     const janela = { ini: 0, fim: 1 }, sel = { ini: 0, fim: 0 };
     function montarJanela() {
       const c = corte();
-      janela.ini = Math.max(projeto.inicio, c.inicio - 30);
-      janela.fim = Math.min(projeto.fim, c.fim + 30);
+      janela.ini = Math.max(c.limite_inicio ?? projeto.inicio, c.inicio - 30);
+      janela.fim = Math.min(c.limite_fim ?? projeto.fim, c.fim + 30);
       sel.ini = c.inicio; sel.fim = c.fim;
       $('.escala span:first-child').textContent = mmss(janela.ini);
       $('#escalaFim').textContent = mmss(janela.fim);
@@ -393,7 +393,7 @@ window.AppReal = (function () {
 
     function marcarOpcoes() {
       const e = corte().estilo;
-      [['optEstilo', e.legenda || 'destaque'], ['optPosicao', e.posicao || 'baixo'], ['optFormato', e.formato || '9:16']].forEach(([id, v]) =>
+      [['optEstilo', e.legenda || 'destaque'], ['optPosicao', e.posicao || 'baixo'], ['optFormato', e.formato || '9:16'], ['optLayout', e.layout || 'auto']].forEach(([id, v]) =>
         $$(`#${id} .opcao`).forEach((b) => b.classList.toggle('ativa', b.dataset.valor === v)));
       $$('.cor').forEach((c) => c.classList.toggle('ativa', c.dataset.cor === e.cor));
       $('#textoLegenda').value = e.texto || corte().palavras.map((w) => w.p).join(' ');
@@ -408,7 +408,7 @@ window.AppReal = (function () {
     }
 
     // Opções de estilo
-    [['optEstilo', 'legenda', false], ['optPosicao', 'posicao', false], ['optFormato', 'formato', true]].forEach(([id, campo, pesado]) =>
+    [['optEstilo', 'legenda', false], ['optPosicao', 'posicao', false], ['optFormato', 'formato', true], ['optLayout', 'layout', true]].forEach(([id, campo, pesado]) =>
       $$(`#${id} .opcao`).forEach((b) => b.addEventListener('click', () => {
         $$(`#${id} .opcao`).forEach((x) => x.classList.toggle('ativa', x === b));
         corte().estilo[campo] = b.dataset.valor;

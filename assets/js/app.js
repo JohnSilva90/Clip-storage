@@ -50,7 +50,7 @@
     ['painel', 'painel.html', 'casa', 'Início'],
     ['importar', 'importar.html', 'upload', 'Novo projeto'],
     ['editor', 'editor.html', 'tesoura', 'Editor de cortes'],
-    ['campeonatos', 'campeonatos.html', 'trofeu', 'Campeonatos'],
+    // ['campeonatos', 'campeonatos.html', 'trofeu', 'Campeonatos'],  // desativado no beta
   ];
   const links2 = [
     ['assinatura', 'assinatura.html', 'cartao', 'Planos e créditos'],
@@ -413,6 +413,7 @@
     grupo('optEstilo', 'estilo', desenharLegenda);
     grupo('optPosicao', 'posicao', desenharLegenda);
     grupo('optFormato', 'formato', () => { video.dataset.formato = estado.formato; });
+    grupo('optLayout', 'layout', () => avisar('No modo real, o vídeo é refeito com o novo enquadramento.'));
     $$('.cor').forEach((c) => c.addEventListener('click', () => {
       $$('.cor').forEach((x) => x.classList.toggle('ativa', x === c));
       document.documentElement.style.setProperty('--destaque-legenda', c.dataset.cor);

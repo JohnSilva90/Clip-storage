@@ -32,7 +32,9 @@ def corte_json(c, palavras) -> dict:
             "nota": c.nota, "motivo": c.motivo, "estilo": c.estilo,
             "previa": f"/api/cortes/{c.id}/previa", "miniatura": f"/api/cortes/{c.id}/miniatura",
             "palavras": palavras_do_corte(palavras, c.inicio, c.fim, c.estilo.get("texto")),
-            "exportado": bool(c.arquivo_final)}
+            "exportado": bool(c.arquivo_final),
+            "limite_inicio": c.fonte_inicio if c.fonte_inicio is not None else c.projeto.inicio,
+            "limite_fim": c.fonte_fim if c.fonte_fim is not None else c.projeto.fim}
 
 
 def buscar(banco: Session, usuario: Usuario, projeto_id: int) -> Projeto:

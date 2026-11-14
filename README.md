@@ -18,16 +18,16 @@ Clip Storage é uma plataforma (SaaS) que transforma vídeos longos, como lives,
 | `recuperar-senha.html` | Recuperação de senha por e-mail |
 | `painel.html` | Painel do criador: créditos, projetos, processamento ao vivo, melhores cortes e desempenho |
 | `importar.html` | Novo projeto: envio de arquivo (lê a duração real do vídeo), link ou YouTube/Twitch/Kick, cálculo de créditos e etapas de processamento |
-| `editor.html` | Editor de cortes: prévia com legenda animada, estilos, cores, posição, formato (9:16, 1:1, 16:9), linha do tempo com alças e publicação |
+| `editor.html` | Editor de cortes: prévia com legenda animada, estilos, cores, posição, **enquadramento (câmera em cima, rosto, tela inteira)**, formato (9:16, 1:1, 16:9) e linha do tempo com alças |
 | `assinatura.html` | Plano atual, uso de créditos, pacotes avulsos, troca de plano e histórico |
-| `campeonatos.html` | Arena de campeonatos com filtros, inscrição e ranking |
+| `campeonatos.html` | Arena de campeonatos (**desativada no beta**, sem link no site) |
 | `termos.html` · `privacidade.html` | Termos de uso e política de privacidade (LGPD), em modelo para revisar |
 
 ## 💰 Modelo de negócio
 
 - **Assinaturas:** Explorador (grátis, 8 créditos), Criador (R$ 29,90/mês, 100 créditos) e Estúdio (R$ 59,90/mês, 250 créditos).
 - **Créditos avulsos:** pacotes de 30, 100 e 300 créditos.
-- **Campeonatos:** competições por visualizações com prêmios, que engajam e atraem assinantes.
+- **Campeonatos** (para depois do beta): competições por visualizações com prêmios.
 - **Regra:** 1 crédito = 1 minuto de vídeo analisado.
 
 ## 🛠️ Tecnologias

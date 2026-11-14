@@ -58,34 +58,46 @@ def volume_por_segundo(arquivo: Path, inicio: float, fim: float) -> list[float]:
     return valores
 
 
-def _filtro_formato(formato: str, largura: int, altura: int) -> str:
-    if formato == "16:9":
-        return (f"scale={largura}:{altura}:force_original_aspect_ratio=decrease,"
-                f"pad={largura}:{altura}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1")
-    proporcao = largura / altura
-    # recorta o centro do vídeo na proporção certa e depois redimensiona
-    return (f"crop='min(iw,ih*{proporcao:.5f})':'min(ih,iw/{proporcao:.5f})',"
-            f"scale={largura}:{altura},setsar=1")
-
-
 def _caminho_ffmpeg(caminho: Path) -> str:
     """O filtro de legenda do FFmpeg precisa de barras e dois-pontos escapados (importante no Windows)."""
     return str(caminho.resolve()).replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
 
 
 def renderizar(arquivo: Path, inicio: float, fim: float, saida: Path, formato: str = "9:16",
-               escala: float = 1.0, legenda_ass: Path | None = None, rapido: bool = False) -> Path:
-    """Corta o trecho, ajusta o formato e (opcionalmente) grava a legenda no vídeo."""
+               escala: float = 1.0, legenda_ass: Path | None = None, rapido: bool = False,
+               layout: dict | None = None) -> Path:
+    """Corta o trecho, monta o enquadramento e (opcionalmente) grava a legenda no vídeo."""
+    from .enquadramento import filtro
     largura, altura = TAMANHOS.get(formato, TAMANHOS["9:16"])
     largura, altura = int(largura * escala) // 2 * 2, int(altura * escala) // 2 * 2
-    filtro = _filtro_formato(formato, largura, altura)
+    if formato == "16:9":
+        grafo = (f"[0:v]scale={largura}:{altura}:force_original_aspect_ratio=decrease,"
+                 f"pad={largura}:{altura}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1[v]")
+    elif formato == "1:1":
+        tipo = (layout or {}).get("tipo")
+        grafo = filtro(layout if tipo in ("rosto", "desfocado") else {"tipo": "centro"}, largura, altura)
+    else:
+        grafo = filtro(layout or {"tipo": "centro"}, largura, altura)
     if legenda_ass:
-        filtro += f",subtitles='{_caminho_ffmpeg(legenda_ass)}'"
+        grafo += f";[v]subtitles='{_caminho_ffmpeg(legenda_ass)}'[saida]"
+    else:
+        grafo += ";[v]null[saida]"
     comando = ["ffmpeg", "-y", "-v", "error", "-ss", f"{inicio:.3f}", "-t", f"{fim - inicio:.3f}", "-i", str(arquivo),
-               "-vf", filtro, "-c:v", "libx264", "-preset", "veryfast" if not rapido else "ultrafast",
-               "-crf", "23" if not rapido else "28", "-pix_fmt", "yuv420p",
+               "-filter_complex", grafo, "-map", "[saida]", "-map", "0:a?",
+               "-c:v", "libx264", "-preset", "ultrafast" if rapido else "veryfast",
+               "-crf", "28" if rapido else "21", "-pix_fmt", "yuv420p",
                "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(saida)]
     _rodar(comando)
+    return saida
+
+
+def recortar_fonte(arquivo: Path, inicio: float, fim: float, saida: Path) -> Path:
+    """Guarda só um pedaço do vídeo original (com folga) em boa qualidade.
+    Assim o original pode ser apagado e o disco do servidor não enche."""
+    _rodar(["ffmpeg", "-y", "-v", "error", "-ss", f"{inicio:.3f}", "-t", f"{fim - inicio:.3f}", "-i", str(arquivo),
+            "-map", "0:v:0", "-map", "0:a?", "-vf", "scale=-2:'min(ih,1080)'",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "160k", str(saida)])
     return saida
 
 

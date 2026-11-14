@@ -4,8 +4,10 @@ Servidor em **Python + FastAPI** que transforma um vídeo longo em cortes curtos
 
 1. Recebe o vídeo enviado pelo site, ou baixa pelo link (YouTube, Twitch, Kick), só o trecho escolhido.
 2. **Transcreve o áudio** com o [faster-whisper](https://github.com/SYSTRAN/faster-whisper), que roda no seu computador e é grátis.
-3. **Escolhe os melhores trechos.** Com a chave da Anthropic, o Claude lê a transcrição e escolhe. Sem chave, o modo grátis procura os trechos com mais energia na voz.
-4. **Corta com FFmpeg**: formato vertical 9:16 (ou 1:1 e 16:9), legenda animada palavra por palavra e marca d'água no plano grátis.
+3. **Escolhe os melhores trechos**, pensando em lives de games: picos de volume (tiros, explosões, gritos), subidas bruscas (sustos e reações) e palavras de emoção (risada, choro, comemoração). Com a chave da Anthropic, o Claude lê a transcrição junto com essas marcas de áudio e escolhe.
+4. **Enquadra sozinho** (OpenCV): detecta o rosto e escolhe o layout. Para streamer, a câmera fica em cima e o jogo embaixo. Para podcast, o rosto fica centralizado. Para gameplay sem câmera, a tela inteira vai sobre um fundo desfocado.
+5. **Corta com FFmpeg**: formato vertical 9:16 (ou 1:1 e 16:9), legenda animada palavra por palavra e marca d'água no plano grátis.
+6. **Economiza disco**: guarda só um pedaço do original em volta de cada corte, apaga o vídeo original e remove projetos com mais de 30 dias (`DIAS_GUARDAR`).
 
 ## 🪟 Como rodar no Windows
 
@@ -109,6 +111,7 @@ backend/
 │   └── processamento/
 │       ├── fila.py        # trabalhador que processa os vídeos em segundo plano
 │       ├── download.py    # importação por link (yt-dlp)
+│       ├── enquadramento.py # detecção de rosto e layouts verticais
 │       ├── video.py       # FFmpeg: duração, áudio, volume, corte
 │       ├── transcricao.py # faster-whisper
 │       ├── destaques.py   # escolha dos trechos (Claude ou volume)

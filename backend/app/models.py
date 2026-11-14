@@ -63,6 +63,9 @@ class Corte(Base):
     nota: Mapped[int] = mapped_column(Integer, default=50)
     motivo: Mapped[str] = mapped_column(Text, default="")
     estilo: Mapped[dict] = mapped_column(JSON, default=dict)   # legenda, cor, posição, formato
+    arquivo_fonte: Mapped[str | None] = mapped_column(String(300), nullable=True)   # pedaço do original guardado
+    fonte_inicio: Mapped[float | None] = mapped_column(Float, nullable=True)
+    fonte_fim: Mapped[float | None] = mapped_column(Float, nullable=True)
     arquivo_previa: Mapped[str | None] = mapped_column(String(300), nullable=True)
     arquivo_final: Mapped[str | None] = mapped_column(String(300), nullable=True)
     miniatura: Mapped[str | None] = mapped_column(String(300), nullable=True)
