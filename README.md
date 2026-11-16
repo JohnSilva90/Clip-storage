@@ -2,6 +2,8 @@
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) ![Status-em desenvolvimento](https://img.shields.io/badge/Status-em%20desenvolvimento-yellow?style=flat-square)
 
+[![Ver demonstração](https://img.shields.io/badge/Ver%20demonstra%C3%A7%C3%A3o-2ea44f?style=for-the-badge)](https://johnsilva90.github.io/Clip-storage/)
+
 **Um vídeo entra. Dezenas de cortes saem.**
 
 Clip Storage é uma plataforma (SaaS) que transforma vídeos longos, como lives, podcasts e vídeos do YouTube, em cortes curtos para TikTok, Instagram Reels e YouTube Shorts usando inteligência artificial.
